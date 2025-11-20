@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "jplag-runner"
+version = "0.1.0"
+description = "JPlag wrapper for plagiarism detection in student submissions"
+authors = ["Batuhan Edgüer <batuhanedguer@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+unidecode = "^1.4.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.1"
+
+[tool.poetry.scripts]
+jplag = "jplag_runner:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
