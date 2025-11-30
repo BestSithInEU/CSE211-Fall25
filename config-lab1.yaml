@@ -50,12 +50,17 @@ outputs:
       include_raw: false
 
 processors:
-  pre_detection: []
+  pre_detection:
+    - name: encoding_normalizer
+      config:
+        extensions: [cpp, cc, h, hpp]
   post_detection: []
 
 settings:
   # Multiple projects - each gets its own results/ directory
-  target_path: ./section1/labwork1-Even/
+  target_paths:
+    - ./section1/labwork1-Even/
+    - ./section1/labwork1-Odd/
   base_path: base  # Global base code folder to exclude from detection
 
   auto_aggregate: true

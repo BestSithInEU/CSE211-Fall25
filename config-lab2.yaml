@@ -1,0 +1,58 @@
+detectors:
+- name: jplag
+  config:
+    language: cpp
+    token_length: 10
+    base_path: base
+    suffixes: [".tpp", ".cpp"]
+
+- name: moss
+  config:
+    userid: '368510311'
+    language: cc
+    extensions: ["tpp", "cpp"]
+    base_path: base
+    max_matches: 10
+
+- name: dolos
+  config:
+    language: cpp
+    file_patterns: ["**/*.tpp", "**/*.cpp"]
+    base_path: base
+    min_similarity: 0
+    output_dir: dolos-report
+
+- name: copydetect
+  config:
+    extensions: ["tpp", "cpp"]
+    boilerplate_dirs: ["base"]
+    display_threshold: 0.33
+    noise_threshold: 25
+    guarantee_threshold: 0.5
+    disable_filtering: false
+    disable_autoopen: true
+
+outputs:
+- name: csv
+  config:
+    min_score: 0
+    include_unique_names: true
+- name: json
+  config:
+    pretty: true
+
+processors:
+  pre_detection:
+    - name: encoding_normalizer
+      config:
+        extensions: [tpp, cpp]
+  post_detection: []
+
+settings:
+  auto_aggregate: true
+  cleanup_temp: false
+  verbose: true
+  target_paths:
+    - ./section1/labwork2-Even/
+    - ./section1/labwork2-Odd/
+  base_path: base
