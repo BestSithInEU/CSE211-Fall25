@@ -32,13 +32,6 @@ uv.lock
 # OS Related
 .DS_Store
 
-# JPlag Runner
-jplag_runner.py
-jplag_config.yaml
-results/
-*.csv
-unique_names.csv
-
 # Development logs
 backend.log
 frontend.log
