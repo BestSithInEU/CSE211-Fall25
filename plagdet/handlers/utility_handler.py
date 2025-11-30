@@ -175,27 +175,31 @@ class UtilityHandler:
         """
         cleanup_service = CleanupService(verbose=self.verbose)
 
+        if target_path is None:
+            target_path = Path(".")
+        else:
+            target_path = Path(target_path)
+
+        # Build list of temp directories to remove (inside target_path)
+        temp_dirs_to_remove = []
+        for dir_name in ['dolos-report', 'results']:
+            dir_path = target_path / dir_name
+            if dir_path.exists() and dir_path.is_dir():
+                temp_dirs_to_remove.append(str(dir_path))
+
         if all_dirs:
             # Clean current directory and all subdirectories recursively
-            if target_path is None:
-                target_path = Path(".")
-
-            # Find all subdirectories
-            base_path = Path(target_path)
-            subdirs = [d for d in base_path.rglob("*") if d.is_dir()]
+            subdirs = [d for d in target_path.rglob("*") if d.is_dir()]
 
             cleanup_service.cleanup_all(
-                test_directories=[base_path] + subdirs,
-                temp_directories=['dolos-report'],
+                test_directories=[target_path] + subdirs,
+                temp_directories=temp_dirs_to_remove,
             )
         else:
             # Clean specified directory or current directory
-            if target_path is None:
-                target_path = Path(".")
-
             cleanup_service.cleanup_all(
-                target_path=Path(target_path),
-                temp_directories=['dolos-report'],
+                target_path=target_path,
+                temp_directories=temp_dirs_to_remove,
             )
 
     def cleanup_custom_dirs(
@@ -221,3 +225,31 @@ class UtilityHandler:
             test_directories=target_dirs,
             temp_directories=temp_dirs,
         )
+
+    def find_archives(self, target_path: Optional[str | Path] = None) -> list[Path]:
+        """Find all archive files (RAR, ZIP) in target directory recursively.
+
+        Args:
+            target_path: Directory to search (default: current directory)
+
+        Returns:
+            List of paths to archive files found
+        """
+        if target_path is None:
+            target_path = Path(".")
+        else:
+            target_path = Path(target_path)
+
+        rar_files = list(target_path.rglob("*.rar"))
+        zip_files = list(target_path.rglob("*.zip"))
+        archive_files = rar_files + zip_files
+        archive_files.sort()
+
+        if archive_files:
+            print_info(f"Found {len(archive_files)} archive file(s):")
+            for archive_file in archive_files:
+                print_info(f"  {archive_file}")
+        else:
+            print_info("No archive files found.")
+
+        return archive_files

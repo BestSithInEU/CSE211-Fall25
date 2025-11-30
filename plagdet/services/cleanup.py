@@ -31,13 +31,13 @@ class CleanupService:
 
         Args:
             target_path: Path to directory to clean
-            patterns: File patterns to remove (default: ['*.csv', '*.json', '*.zip'])
+            patterns: File patterns to remove (default: ['*.csv', '*.json'])
 
         Returns:
             List of removed file paths
         """
         if patterns is None:
-            patterns = ['*.csv', '*.json', '*.zip']
+            patterns = ['*.csv', '*.json', 'result*.zip']
 
         removed = []
 
@@ -81,21 +81,21 @@ class CleanupService:
         self,
         directories: List[str] = None,
     ) -> List[str]:
-        """Clean up temporary directories (like dolos-report).
+        """Clean up temporary directories (like dolos-report, results).
 
         Args:
-            directories: List of directory names to remove (default: ['dolos-report'])
+            directories: List of directory paths to remove (full paths or relative)
 
         Returns:
             List of removed directory paths
         """
         if directories is None:
-            directories = ['dolos-report']
+            return []
 
         removed = []
 
-        for dir_name in directories:
-            dir_path = Path(dir_name)
+        for dir_path_str in directories:
+            dir_path = Path(dir_path_str)
             if dir_path.exists() and dir_path.is_dir():
                 try:
                     shutil.rmtree(dir_path)

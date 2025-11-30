@@ -24,6 +24,7 @@ from .commands import (
     check_config_command,
     unzip_command,
     cleanup_command,
+    find_archives_command,
     aggregate_command,
     report_command,
 )
@@ -32,7 +33,7 @@ from .commands import (
 # This is intentional - importing plugins registers them via decorators
 from ..plugins.detectors import copydetect_detector, dolos, jplag, moss
 from ..plugins.outputs import csv, json
-from ..plugins.processors import normalizer, unzipper
+from ..plugins.processors import encoding_normalizer, normalizer, unzipper
 
 
 # Create Typer app with rich help formatting
@@ -52,6 +53,7 @@ app.command(name="list-plugins")(list_plugins_command)
 app.command(name="check-config")(check_config_command)
 app.command(name="unzip")(unzip_command)
 app.command(name="cleanup")(cleanup_command)
+app.command(name="find-archives")(find_archives_command)
 app.command(name="aggregate")(aggregate_command)
 app.command(name="report")(report_command)
 

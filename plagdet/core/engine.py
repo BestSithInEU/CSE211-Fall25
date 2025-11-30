@@ -8,7 +8,7 @@ from ..core.models.detection import DetectionResult
 from ..factories import DetectorFactory, OutputFactory, ProcessorFactory
 from ..plugins.models.detectors import JPlagConfig, MossConfig, DolosConfig, CopyDetectConfig
 from ..plugins.models.outputs import CSVOutputConfig, JSONOutputConfig
-from ..plugins.models.processors import NormalizerConfig, UnzipperConfig
+from ..plugins.models.processors import EncodingNormalizerConfig, NormalizerConfig, UnzipperConfig
 from ..services.aggregation import AggregationService
 from ..services.cleanup import CleanupService
 from ..services.output import OutputManager
@@ -36,6 +36,7 @@ class PlagiarismDetectionEngine:
 
     # Map processor names to their Pydantic config classes
     PROCESSOR_CONFIG_MAP = {
+        'encoding_normalizer': EncodingNormalizerConfig,
         'normalizer': NormalizerConfig,
         'unzipper': UnzipperConfig,
     }
@@ -109,6 +110,9 @@ class PlagiarismDetectionEngine:
         Args:
             target_path: Directory containing submissions to analyze
         """
+        # Set target_path in context for processors
+        self.context['target_path'] = str(target_path)
+
         # Stage 1: Pre-detection processors
         self._run_processors('pre_detection')
 

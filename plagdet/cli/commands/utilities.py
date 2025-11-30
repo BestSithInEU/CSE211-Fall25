@@ -1,7 +1,7 @@
 """Utility commands - Unzip and cleanup operations."""
 
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 import typer
 
@@ -40,9 +40,9 @@ def unzip_command(
 
 
 def cleanup_command(
-    target_path: Optional[Path] = typer.Argument(
+    target_paths: Optional[List[Path]] = typer.Argument(
         None,
-        help="Target directory to clean (default: current directory)",
+        help="Target directories to clean (default: current directory)",
     ),
     all_dirs: bool = typer.Option(
         False,
@@ -53,17 +53,45 @@ def cleanup_command(
 ):
     """Clean up generated result files.
 
-    Removes CSV, JSON, ZIP files from target directory and dolos-report.
+    Removes CSV, JSON, ZIP files, results/ and dolos-report/ directories.
 
     [cyan]Examples:[/cyan]
-        plagdet cleanup                    # Clean current directory
-        plagdet cleanup ./results/         # Clean specific directory
-        plagdet cleanup --all              # Clean all subdirectories
+        plagdet cleanup                              # Clean current directory
+        plagdet cleanup ./lab1/ ./lab2/              # Clean multiple directories
+        plagdet cleanup --all                        # Clean all subdirectories
     """
     try:
         handler = UtilityHandler()
-        handler.cleanup(target_path=target_path, all_dirs=all_dirs)
+
+        if target_paths:
+            for target_path in target_paths:
+                handler.cleanup(target_path=target_path, all_dirs=all_dirs)
+        else:
+            handler.cleanup(target_path=None, all_dirs=all_dirs)
 
     except Exception as e:
         print_error(f"Cleanup failed: {e}")
+        raise typer.Exit(code=1)
+
+
+def find_archives_command(
+    target_path: Optional[Path] = typer.Argument(
+        None,
+        help="Target directory to search (default: current directory)",
+    ),
+):
+    """Find all archive files (RAR, ZIP) recursively.
+
+    Lists all archive files with their full paths.
+
+    [cyan]Examples:[/cyan]
+        plagdet find-archives                   # Search current directory
+        plagdet find-archives ./submissions/    # Search specific directory
+    """
+    try:
+        handler = UtilityHandler()
+        handler.find_archives(target_path=target_path)
+
+    except Exception as e:
+        print_error(f"Find archives failed: {e}")
         raise typer.Exit(code=1)
