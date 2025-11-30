@@ -1,0 +1,4 @@
+=== WRONG FILE EXTENSIONS ===
+SUDE_ATANSAY: StackQuestionsNonMember.h, StackQuestionsMember.h
+BARIS_SAHIN: StackQuestionsMember.h
+
