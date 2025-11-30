@@ -1,5 +1,7 @@
 """Pydantic configuration models for processor plugins."""
 
+from typing import List
+
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -57,3 +59,20 @@ class UnzipperConfig(BaseModel):
         if not v or not v.strip():
             raise ValueError("extract_to path cannot be empty")
         return v.strip()
+
+
+class EncodingNormalizerConfig(BaseModel):
+    """Configuration for encoding normalizer processor."""
+
+    extensions: List[str] = Field(
+        default_factory=lambda: ["cpp", "c", "h", "hpp", "cc", "py", "java"],
+        description="File extensions to check and normalize encoding"
+    )
+
+    @field_validator("extensions")
+    @classmethod
+    def validate_extensions(cls, v: List[str]) -> List[str]:
+        """Validate extensions list is not empty."""
+        if not v:
+            raise ValueError("extensions list cannot be empty")
+        return [ext.strip().lstrip('.') for ext in v]
