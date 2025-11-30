@@ -123,6 +123,10 @@ class DolosConfig(BaseModel):
     file_pattern: Optional[str] = Field(
         default=None, description="Glob pattern for files to include (e.g., '**/*.py')"
     )
+    file_patterns: Optional[List[str]] = Field(
+        default=None,
+        description="List of glob patterns for files (e.g., ['**/*.tpp', '**/*.cpp']). Takes precedence over file_pattern.",
+    )
     min_similarity: float = Field(
         default=0.0,
         ge=0.0,

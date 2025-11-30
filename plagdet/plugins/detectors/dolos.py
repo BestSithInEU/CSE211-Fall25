@@ -71,8 +71,13 @@ class DolosDetector(DetectorPlugin):
         dolos_config = config if isinstance(config, DolosConfig) else DolosConfig(**config.model_dump())
 
         language = dolos_config.language
-        file_pattern = dolos_config.file_pattern or self._get_default_pattern(language)
         min_similarity = dolos_config.min_similarity
+
+        # Support multiple file patterns (takes precedence) or single pattern
+        if dolos_config.file_patterns:
+            file_patterns = dolos_config.file_patterns
+        else:
+            file_patterns = [dolos_config.file_pattern or self._get_default_pattern(language)]
 
         # Make output directory relative to target path for multi-project support
         target_path_obj = Path(target_path)
@@ -86,11 +91,13 @@ class DolosDetector(DetectorPlugin):
 
         target_path_str = str(target_path)
 
-        # Build file path pattern and expand glob
-        full_pattern = os.path.join(target_path_str, file_pattern)
-
-        # Expand glob pattern to get actual file list
-        files = glob.glob(full_pattern, recursive=True)
+        # Expand all glob patterns to get file list
+        files = []
+        for pattern in file_patterns:
+            full_pattern = os.path.join(target_path_str, pattern)
+            files.extend(glob.glob(full_pattern, recursive=True))
+        # Remove duplicates while preserving order
+        files = list(dict.fromkeys(files))
 
         # Exclude files in base_path directory if set
         if dolos_config.base_path:
@@ -100,7 +107,7 @@ class DolosDetector(DetectorPlugin):
             print_info(f"Excluding base code from: {dolos_config.base_path}")
 
         if not files:
-            raise RuntimeError(f"No files found matching pattern: {full_pattern}")
+            raise RuntimeError(f"No files found matching patterns: {file_patterns}")
 
         print_info(f"Found {len(files)} files to analyze")
 
