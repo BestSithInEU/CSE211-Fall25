@@ -78,9 +78,12 @@ class CopyDetectDetector(DetectorPlugin):
 
         # Get all student subdirectories as test directories
         # CopyDetect works better when given explicit directories
+        # Exclude output directories and base path
+        excluded_dirs = {'dolos-report', 'results', cd_config.base_path}
+
         student_dirs = []
         for item in Path(target_path_str).iterdir():
-            if item.is_dir() and item.name != cd_config.base_path:
+            if item.is_dir() and item.name not in excluded_dirs:
                 student_dirs.append(str(item))
 
         # Use student directories if found, otherwise use target path

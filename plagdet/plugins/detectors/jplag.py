@@ -152,8 +152,8 @@ class JPlagDetector(DetectorPlugin):
         if not os.path.exists(result_zip):
             raise FileNotFoundError("JPlag did not generate result.zip")
 
-        # Extract results
-        results_dir = Path(target_path) / "results"
+        # Extract results to temp directory (not 'results' to avoid conflict with output dir)
+        results_dir = Path(target_path) / ".jplag_temp"
         results_dir.mkdir(exist_ok=True)
 
         with zipfile.ZipFile(result_zip, 'r') as zip_ref:
@@ -199,7 +199,7 @@ class JPlagDetector(DetectorPlugin):
                 target_zip.unlink()
             shutil.move(result_zip, target_path)
 
-        # Remove extracted results directory
-        results_dir = Path(target_path) / "results"
+        # Remove extracted temp directory
+        results_dir = Path(target_path) / ".jplag_temp"
         if results_dir.exists():
             shutil.rmtree(results_dir)
