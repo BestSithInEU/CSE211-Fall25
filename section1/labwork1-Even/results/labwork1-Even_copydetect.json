@@ -1,6 +1,13 @@
 {
   "comparisons": [
     {
+      "first_submission": "ALP_EMRE_BAYBUGA",
+      "second_submission": "GPT",
+      "similarity": 0.9379014989293362,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
       "first_submission": "ISMAIL_EFE_YALCINKAYA",
       "second_submission": "GPT",
       "similarity": 0.922945205479452,
@@ -15,8 +22,8 @@
       "extra": {}
     },
     {
-      "first_submission": "GPT",
-      "second_submission": "AYSE_ALKAN",
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "GPT",
       "similarity": 0.8477157360406091,
       "metric": "COPYDETECT",
       "extra": {}
@@ -25,6 +32,20 @@
       "first_submission": "GPT",
       "second_submission": "CLAUDE",
       "similarity": 0.8121827411167513,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.7909836065573771,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_EMRE_BAYBUGA",
+      "second_submission": "CLAUDE",
+      "similarity": 0.7687366167023555,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -43,20 +64,6 @@
       "extra": {}
     },
     {
-      "first_submission": "HIRANUR_DENIZ",
-      "second_submission": "EYLUL_COSKUN",
-      "similarity": 0.7160804020100503,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "GPT",
-      "second_submission": "ALP_EMRE_BAYBUGA",
-      "similarity": 0.9379014989293362,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
       "first_submission": "EYLUL_COSKUN",
       "second_submission": "AYSE_ALKAN",
       "similarity": 0.7028688524590164,
@@ -71,8 +78,8 @@
       "extra": {}
     },
     {
-      "first_submission": "DENIZ_KAYRA_AYDIN",
-      "second_submission": "BORA_ERDEM_ALAN",
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
       "similarity": 0.6954314720812182,
       "metric": "COPYDETECT",
       "extra": {}
@@ -99,8 +106,8 @@
       "extra": {}
     },
     {
-      "first_submission": "CLAUDE",
-      "second_submission": "AYSE_ALKAN",
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "CLAUDE",
       "similarity": 0.6694915254237288,
       "metric": "COPYDETECT",
       "extra": {}
@@ -127,6 +134,13 @@
       "extra": {}
     },
     {
+      "first_submission": "OMER_FARUK_GUCER",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.639921722113503,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
       "first_submission": "HIRANUR_DENIZ",
       "second_submission": "CEYDA_SENAY",
       "similarity": 0.6381909547738693,
@@ -134,16 +148,30 @@
       "extra": {}
     },
     {
-      "first_submission": "SUDE_ATANSAY",
+      "first_submission": "ALP_EMRE_BAYBUGA",
       "second_submission": "AYSE_ALKAN",
-      "similarity": 0.593698175787728,
+      "similarity": 0.6338329764453962,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
-      "first_submission": "HIRANUR_DENIZ",
-      "second_submission": "AHMET_ZEKI_IHTIYAROGLU",
-      "similarity": 0.592964824120603,
+      "first_submission": "ISMAIL_EFE_YALCINKAYA",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.5993150684931506,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "HIRANUR_DENIZ",
+      "similarity": 0.7160804020100503,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "AYSE_ALKAN",
+      "similarity": 0.593698175787728,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -162,16 +190,16 @@
       "extra": {}
     },
     {
-      "first_submission": "DENIZ_KAYRA_AYDIN",
-      "second_submission": "OMER_FARUK_GUCER",
-      "similarity": 0.639921722113503,
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "GPT",
+      "similarity": 0.5635245901639344,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
-      "first_submission": "EYLUL_COSKUN",
-      "second_submission": "ALGUHAN_KURULAR",
-      "similarity": 0.5655737704918032,
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.5579470198675497,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -183,23 +211,23 @@
       "extra": {}
     },
     {
-      "first_submission": "HIRANUR_DENIZ",
-      "second_submission": "AYSE_ALKAN",
-      "similarity": 0.5552763819095478,
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.5532786885245902,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
-      "first_submission": "HIRANUR_DENIZ",
-      "second_submission": "YUSUF_ISA_ZERENUZ",
-      "similarity": 0.5477386934673367,
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.5529801324503312,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
-      "first_submission": "HIRANUR_DENIZ",
+      "first_submission": "EYLUL_COSKUN",
       "second_submission": "IRMAK_ZEHRA_EMRI",
-      "similarity": 0.5452261306532663,
+      "similarity": 0.5512295081967213,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -211,9 +239,9 @@
       "extra": {}
     },
     {
-      "first_submission": "CLAUDE",
-      "second_submission": "ALP_EMRE_BAYBUGA",
-      "similarity": 0.7687366167023555,
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.5422885572139303,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -225,22 +253,29 @@
       "extra": {}
     },
     {
-      "first_submission": "DENIZ_KAYRA_AYDIN",
-      "second_submission": "ALGUHAN_KURULAR",
-      "similarity": 0.5350877192982456,
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.5368852459016393,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "AHMET_ZEKI_IHTIYAROGLU",
+      "second_submission": "HIRANUR_DENIZ",
+      "similarity": 0.592964824120603,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
       "first_submission": "EREN_KOCAGOKCEN",
-      "second_submission": "AHMET_ZEKI_IHTIYAROGLU",
+      "second_submission": "ALGUHAN_KURULAR",
       "similarity": 0.5306122448979592,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
       "first_submission": "EREN_KOCAGOKCEN",
-      "second_submission": "ALGUHAN_KURULAR",
+      "second_submission": "AHMET_ZEKI_IHTIYAROGLU",
       "similarity": 0.5306122448979592,
       "metric": "COPYDETECT",
       "extra": {}
@@ -253,27 +288,6 @@
       "extra": {}
     },
     {
-      "first_submission": "HIRANUR_DENIZ",
-      "second_submission": "EGE_HURIEL",
-      "similarity": 0.5276381909547738,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "ALP_DIKMEN",
-      "second_submission": "ALGUHAN_KURULAR",
-      "similarity": 0.5529801324503312,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "DEMIR_OZHAN",
-      "second_submission": "EYLUL_COSKUN",
-      "similarity": 0.7909836065573771,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
       "first_submission": "EREN_KOCAGOKCEN",
       "second_submission": "ALP_DIKMEN",
       "similarity": 0.5238095238095238,
@@ -282,14 +296,14 @@
     },
     {
       "first_submission": "EREN_KOCAGOKCEN",
-      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "second_submission": "DEMIR_OZHAN",
       "similarity": 0.5238095238095238,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
       "first_submission": "EREN_KOCAGOKCEN",
-      "second_submission": "DEMIR_OZHAN",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
       "similarity": 0.5238095238095238,
       "metric": "COPYDETECT",
       "extra": {}
@@ -323,13 +337,6 @@
       "extra": {}
     },
     {
-      "first_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
-      "second_submission": "DEMIR_OZHAN",
-      "similarity": 0.5090016366612111,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
       "first_submission": "OMER_FARUK_GUCER",
       "second_submission": "GPT",
       "similarity": 0.5068493150684932,
@@ -337,16 +344,9 @@
       "extra": {}
     },
     {
-      "first_submission": "DENIZ_KAYRA_AYDIN",
-      "second_submission": "DEMIR_OZHAN",
-      "similarity": 0.5052631578947369,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "OMER_FARUK_GUCER",
-      "second_submission": "ALGUHAN_KURULAR",
-      "similarity": 0.5048923679060665,
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.5350877192982456,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -379,9 +379,23 @@
       "extra": {}
     },
     {
+      "first_submission": "EGE_HURIEL",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.4971857410881801,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
       "first_submission": "ALP_EMRE_BAYBUGA",
       "second_submission": "DEMIR_OZHAN",
       "similarity": 0.49678800856531047,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "AHMET_ZEKI_IHTIYAROGLU",
+      "similarity": 0.4959016393442623,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -415,14 +429,14 @@
     },
     {
       "first_submission": "EYLUL_COSKUN",
-      "second_submission": "CLAUDE",
+      "second_submission": "CEYDA_SENAY",
       "similarity": 0.47950819672131145,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
       "first_submission": "EYLUL_COSKUN",
-      "second_submission": "CEYDA_SENAY",
+      "second_submission": "CLAUDE",
       "similarity": 0.47950819672131145,
       "metric": "COPYDETECT",
       "extra": {}
@@ -435,16 +449,16 @@
       "extra": {}
     },
     {
-      "first_submission": "OMER_FARUK_GUCER",
-      "second_submission": "EYLUL_COSKUN",
-      "similarity": 0.5020491803278688,
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.4774590163934426,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
-      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "first_submission": "OMER_FARUK_GUCER",
       "second_submission": "EYLUL_COSKUN",
-      "similarity": 0.5512295081967213,
+      "similarity": 0.5020491803278688,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -463,6 +477,13 @@
       "extra": {}
     },
     {
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.5048923679060665,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
       "first_submission": "EYLUL_COSKUN",
       "second_submission": "EDHEM_TATAR",
       "similarity": 0.4692622950819672,
@@ -470,16 +491,16 @@
       "extra": {}
     },
     {
-      "first_submission": "OMER_FARUK_GUCER",
-      "second_submission": "DEMIR_OZHAN",
-      "similarity": 0.4637964774951076,
+      "first_submission": "YUSUF_ISA_ZERENUZ",
+      "second_submission": "HIRANUR_DENIZ",
+      "similarity": 0.5477386934673367,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
-      "first_submission": "ERDAL_DENIZ_OZBEY",
-      "second_submission": "ISMAIL_EFE_YALCINKAYA",
-      "similarity": 0.5993150684931506,
+      "first_submission": "OMER_FARUK_GUCER",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.4637964774951076,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -498,9 +519,16 @@
       "extra": {}
     },
     {
-      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "first_submission": "ALGUHAN_KURULAR",
       "second_submission": "EYLUL_COSKUN",
-      "similarity": 0.5368852459016393,
+      "similarity": 0.5655737704918032,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "OMER_FARUK_GUCER",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.45596868884540115,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -526,6 +554,13 @@
       "extra": {}
     },
     {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.4487704918032787,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
       "first_submission": "EGE_HURIEL",
       "second_submission": "AYSE_ALKAN",
       "similarity": 0.44840525328330205,
@@ -536,13 +571,6 @@
       "first_submission": "DEMIR_OZHAN",
       "second_submission": "AYSE_ALKAN",
       "similarity": 0.576271186440678,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "AYSE_ALKAN",
-      "second_submission": "ALP_EMRE_BAYBUGA",
-      "similarity": 0.6338329764453962,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -561,13 +589,6 @@
       "extra": {}
     },
     {
-      "first_submission": "GPT",
-      "second_submission": "EYLUL_COSKUN",
-      "similarity": 0.5635245901639344,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
       "first_submission": "ALP_DIKMEN",
       "second_submission": "MERTCAN_ARSLAN",
       "similarity": 0.4893964110929853,
@@ -575,23 +596,9 @@
       "extra": {}
     },
     {
-      "first_submission": "YUSUF_ISA_ZERENUZ",
-      "second_submission": "EYLUL_COSKUN",
-      "similarity": 0.4487704918032787,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
       "first_submission": "IRMAK_ZEHRA_EMRI",
       "second_submission": "DEMIR_OZHAN",
       "similarity": 0.43243243243243246,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "ERDAL_DENIZ_OZBEY",
-      "second_submission": "SUDE_ATANSAY",
-      "similarity": 0.5422885572139303,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -610,23 +617,16 @@
       "extra": {}
     },
     {
-      "first_submission": "DENIZ_KAYRA_AYDIN",
-      "second_submission": "SUDE_ATANSAY",
-      "similarity": 0.4263157894736842,
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.42549668874172186,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
       "first_submission": "DEMIR_OZHAN",
-      "second_submission": "ALGUHAN_KURULAR",
-      "similarity": 0.5579470198675497,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "BORA_ERDEM_ALAN",
-      "second_submission": "ALGUHAN_KURULAR",
-      "similarity": 0.4230118443316413,
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.5090016366612111,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -641,20 +641,6 @@
       "first_submission": "OMER_FARUK_GUCER",
       "second_submission": "ALP_EMRE_BAYBUGA",
       "similarity": 0.4817987152034261,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
-      "second_submission": "EYLUL_COSKUN",
-      "similarity": 0.5532786885245902,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
-      "second_submission": "ALGUHAN_KURULAR",
-      "similarity": 0.42549668874172186,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -722,23 +708,9 @@
       "extra": {}
     },
     {
-      "first_submission": "AHMET_ZEKI_IHTIYAROGLU",
-      "second_submission": "EYLUL_COSKUN",
-      "similarity": 0.4959016393442623,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
       "first_submission": "ALP_EMRE_BAYBUGA",
       "second_submission": "YUSUF_ERDEM_ALTINSOY",
       "similarity": 0.41113490364025695,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "EGE_HURIEL",
-      "second_submission": "SUDE_ATANSAY",
-      "similarity": 0.4090056285178236,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -785,6 +757,13 @@
       "extra": {}
     },
     {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.4263157894736842,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
       "first_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
       "second_submission": "MERTCAN_ARSLAN",
       "similarity": 0.4192495921696574,
@@ -806,16 +785,16 @@
       "extra": {}
     },
     {
-      "first_submission": "ISMAIL_EFE_YALCINKAYA",
-      "second_submission": "OMER_FARUK_GUCER",
-      "similarity": 0.45596868884540115,
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.3980891719745223,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
-      "first_submission": "ALP_DIKMEN",
-      "second_submission": "ISMAIL_EFE_YALCINKAYA",
-      "similarity": 0.3980891719745223,
+      "first_submission": "ISMAIL_EFE_YALCINKAYA",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.3972602739726027,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -841,9 +820,16 @@
       "extra": {}
     },
     {
-      "first_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
-      "second_submission": "EMRE_ERGUL",
-      "similarity": 0.3911620294599018,
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "HIRANUR_DENIZ",
+      "similarity": 0.5552763819095478,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "EMRE_ERGUL",
+      "second_submission": "AYSE_ALKAN",
+      "similarity": 0.3912337662337662,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -851,6 +837,13 @@
       "first_submission": "ISMAIL_EFE_YALCINKAYA",
       "second_submission": "EYLUL_COSKUN",
       "similarity": 0.5307377049180327,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "EMRE_ERGUL",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.3911620294599018,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -876,6 +869,27 @@
       "extra": {}
     },
     {
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "HIRANUR_DENIZ",
+      "similarity": 0.5452261306532663,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "DEMIR_OZHAN",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.5052631578947369,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "EGE_HURIEL",
+      "second_submission": "HIRANUR_DENIZ",
+      "similarity": 0.5276381909547738,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
       "first_submission": "DENIZ_KAYRA_AYDIN",
       "second_submission": "GPT",
       "similarity": 0.3824561403508772,
@@ -897,15 +911,8 @@
       "extra": {}
     },
     {
-      "first_submission": "EGE_HURIEL",
-      "second_submission": "EYLUL_COSKUN",
-      "similarity": 0.4774590163934426,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "SUDE_ATANSAY",
-      "second_submission": "ALGUHAN_KURULAR",
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "SUDE_ATANSAY",
       "similarity": 0.3781094527363184,
       "metric": "COPYDETECT",
       "extra": {}
@@ -921,13 +928,6 @@
       "first_submission": "DEMIR_OZHAN",
       "second_submission": "GPT",
       "similarity": 0.467005076142132,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "AYSE_ALKAN",
-      "second_submission": "EMRE_ERGUL",
-      "similarity": 0.3912337662337662,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -960,6 +960,13 @@
       "extra": {}
     },
     {
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "BORA_ERDEM_ALAN",
+      "similarity": 0.4230118443316413,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
       "first_submission": "YUSUF_ERDEM_ALTINSOY",
       "second_submission": "IRMAK_ZEHRA_EMRI",
       "similarity": 0.370242214532872,
@@ -988,6 +995,13 @@
       "extra": {}
     },
     {
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "GPT",
+      "similarity": 0.3675496688741722,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
       "first_submission": "EGE_HURIEL",
       "second_submission": "EDHEM_TATAR",
       "similarity": 0.36585365853658536,
@@ -1002,9 +1016,9 @@
       "extra": {}
     },
     {
-      "first_submission": "DENIZ_KAYRA_AYDIN",
-      "second_submission": "ISMAIL_EFE_YALCINKAYA",
-      "similarity": 0.3631578947368421,
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.3624801271860095,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -1012,6 +1026,13 @@
       "first_submission": "AHMET_ZEKI_IHTIYAROGLU",
       "second_submission": "ALP_DIKMEN",
       "similarity": 0.3617021276595745,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.4090056285178236,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -1052,15 +1073,22 @@
     },
     {
       "first_submission": "EGE_HURIEL",
-      "second_submission": "DEMIR_OZHAN",
+      "second_submission": "ALGUHAN_KURULAR",
       "similarity": 0.35647279549718575,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
       "first_submission": "EGE_HURIEL",
-      "second_submission": "ALGUHAN_KURULAR",
+      "second_submission": "DEMIR_OZHAN",
       "similarity": 0.35647279549718575,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "ISMAIL_EFE_YALCINKAYA",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.3631578947368421,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -1068,13 +1096,6 @@
       "first_submission": "HIRANUR_DENIZ",
       "second_submission": "ALP_EMRE_BAYBUGA",
       "similarity": 0.3542713567839196,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
-      "second_submission": "IRMAK_ZEHRA_EMRI",
-      "similarity": 0.3624801271860095,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -1103,13 +1124,6 @@
       "first_submission": "HIRANUR_DENIZ",
       "second_submission": "EDHEM_TATAR",
       "similarity": 0.35175879396984927,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "ERDAL_DENIZ_OZBEY",
-      "second_submission": "EGE_HURIEL",
-      "similarity": 0.4971857410881801,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -1164,15 +1178,22 @@
     },
     {
       "first_submission": "IRMAK_ZEHRA_EMRI",
-      "second_submission": "CEYDA_SENAY",
-      "similarity": 0.34181240063593005,
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.34340222575516693,
       "metric": "COPYDETECT",
       "extra": {}
     },
     {
-      "first_submission": "EGE_HURIEL",
-      "second_submission": "IRMAK_ZEHRA_EMRI",
-      "similarity": 0.34340222575516693,
+      "first_submission": "DEMIR_OZHAN",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.3418693982074264,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "CEYDA_SENAY",
+      "similarity": 0.34181240063593005,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -1180,13 +1201,6 @@
       "first_submission": "YUSUF_ERDEM_ALTINSOY",
       "second_submission": "DEMIR_OZHAN",
       "similarity": 0.3408304498269896,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "EREN_KOCAGOKCEN",
-      "second_submission": "ERDAL_DENIZ_OZBEY",
-      "similarity": 0.3401360544217687,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -1200,6 +1214,13 @@
     {
       "first_submission": "EREN_KOCAGOKCEN",
       "second_submission": "SUDE_ATANSAY",
+      "similarity": 0.3401360544217687,
+      "metric": "COPYDETECT",
+      "extra": {}
+    },
+    {
+      "first_submission": "EREN_KOCAGOKCEN",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
       "similarity": 0.3401360544217687,
       "metric": "COPYDETECT",
       "extra": {}
@@ -1241,22 +1262,8 @@
     },
     {
       "first_submission": "DEMIR_OZHAN",
-      "second_submission": "ISMAIL_EFE_YALCINKAYA",
-      "similarity": 0.3972602739726027,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "DEMIR_OZHAN",
       "second_submission": "CLAUDE",
       "similarity": 0.38474295190713104,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "ERDAL_DENIZ_OZBEY",
-      "second_submission": "DEMIR_OZHAN",
-      "similarity": 0.3418693982074264,
       "metric": "COPYDETECT",
       "extra": {}
     },
@@ -1271,13 +1278,6 @@
       "first_submission": "IRMAK_ZEHRA_EMRI",
       "second_submission": "ERDAL_DENIZ_OZBEY",
       "similarity": 0.3354531001589825,
-      "metric": "COPYDETECT",
-      "extra": {}
-    },
-    {
-      "first_submission": "GPT",
-      "second_submission": "ALGUHAN_KURULAR",
-      "similarity": 0.3675496688741722,
       "metric": "COPYDETECT",
       "extra": {}
     },
