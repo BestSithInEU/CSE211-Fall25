@@ -1,0 +1,32 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+#
+# Type should be one of the following:
+# * feat: A new feature
+# * fix: A bug fix
+# * docs: Documentation only changes
+# * style: Code style changes (formatting, missing semicolons, etc)
+# * refactor: Code refactoring (neither fixes a bug nor adds a feature)
+# * perf: Performance improvements
+# * test: Adding or updating tests
+# * build: Changes to build system or dependencies
+# * ci: CI/CD configuration changes
+# * chore: Other changes that don't modify src or test files
+# * revert: Revert a previous commit
+#
+# Scope examples: auth, api, frontend, backend, cli, database, docker, docs, config, tests
+#
+# Subject line should:
+# * Use imperative mood ("Add feature" not "Added feature")
+# * Be 50 characters or less
+# * Not end with a period
+#
+# Body should explain what and why vs. how
+# Use the body to explain what and why you have done something.
+# Wrap it to about 72 characters or so.
+#
+# Footer should contain any information about Breaking Changes
+# and is also the place to reference GitHub issues that this commit closes.
