@@ -31,3 +31,28 @@ uv.lock
 
 # OS Related
 .DS_Store
+
+# JPlag Runner
+jplag_runner.py
+jplag_config.yaml
+results/
+*.csv
+unique_names.csv
+
+# Development logs
+backend.log
+frontend.log
+*.log
+
+# Environment files
+.env
+.env.local
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/node_modules/
+
+# Backend
+backend/__pycache__/
+backend/*.pyc

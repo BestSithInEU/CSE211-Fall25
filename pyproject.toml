@@ -1,25 +1,55 @@
-[tool.poetry]
-name = "jplag-runner"
-version = "0.1.0"
-description = "JPlag wrapper for plagiarism detection in student submissions"
-authors = ["Batuhan Edgüer <batuhanedguer@gmail.com>"]
+[project]
+name = "plagdet"
+version = "0.2.0"
+description = "Multi-detector plagiarism detection tool with plugin architecture"
+authors = [{ name = "Batuhan Edgüer", email = "batuhanedguer@gmail.com" }]
 readme = "README.md"
-package-mode = false
+requires-python = ">=3.9"
+dependencies = [
+	"unidecode>=1.4.0",
+	"click>=8.1.0",
+	"typer>=0.12.0",
+	"rich>=13.0.0",
+	"rich-click>=1.7.0",
+	"loguru>=0.7.0",
+	"pydantic>=2.0.0",
+	"pydantic-settings>=2.0.0",
+	"pyyaml>=6.0",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.9"
-unidecode = "^1.4.0"
+[project.optional-dependencies]
+all = [
+	"pytest>=7.0",
+	"black>=25.1.0",
+	"ruff>=0.1.0",
+	"mosspy>=1.0.0",
+	"copydetect>=0.5.0",
+	"pandas>=2.0.0",
+]
 
-[tool.poetry.group.dev.dependencies]
-black = "^25.1.0"
-isort = "^6.0.1"
+[dependency-groups]
+dev = ["pytest>=7.0", "black>=25.1.0", "ruff>=0.1.0"]
+detectors = [
+	"mosspy>=1.0.0",     # MOSS detector
+	"copydetect>=0.5.0", # CopyDetect detector
+	"pandas>=2.0.0",     # For parsing Dolos CSV output
+	"plotly>=5.18.0",    # Interactive visualizations for reports
+	"networkx>=3.0",     # Network graph for similarity connections
+]
+backend = [
+	"fastapi>=0.109.0",        # Web framework
+	"uvicorn[standard]>=0.27.0", # ASGI server
+	"python-multipart>=0.0.6", # File upload support
+	"websockets>=12.0",        # WebSocket support
+	"aiofiles>=23.2.1",        # Async file I/O
+]
 
-[tool.poetry.scripts]
-jplag = "jplag_runner:main"
+[project.scripts]
+plagdet = "plagdet.cli:cli_main"
 
 [build-system]
-requires = ["poetry-core>=2.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.black]
 line-length = 88

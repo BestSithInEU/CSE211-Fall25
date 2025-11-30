@@ -1,0 +1,64 @@
+# Multi-Project Configuration Example
+# Detects plagiarism across multiple projects/labs
+
+detectors:
+  - name: jplag
+    config:
+      language: cpp
+      token_length: 10
+      subdirectory: ""
+      suffixes: [".cpp", ".h"]
+      exclude_files: []
+
+  - name: dolos
+    config:
+      language: cpp
+      file_pattern: "**/*.cpp"
+      min_similarity: 0.0
+      output_dir: dolos-report
+
+  - name: moss
+    config:
+      userid: "368510311"
+      language: cc
+      extensions: [cpp, cc, h, hpp]
+      max_matches: 10
+
+  - name: copydetect
+    config:
+      extensions: [cpp, cc, h, hpp]
+      display_threshold: 0.33
+      noise_threshold: 25
+      disable_autoopen: true
+
+outputs:
+  - name: csv
+    config:
+      min_score: 0.0
+      metric: AVG
+      include_unique_names: true
+      delimiter: ","
+      include_header: true
+      sort_by_similarity: true
+
+  - name: json
+    config:
+      pretty: true
+      indent: 2
+      include_metadata: true
+      min_score: 0.0
+      include_raw: false
+
+processors:
+  pre_detection: []
+  post_detection: []
+
+settings:
+  # Multiple projects - each gets its own results/ directory
+  target_path: ./section1/labwork1-Even/
+  base_path: base  # Global base code folder to exclude from detection
+
+  auto_aggregate: true
+  cleanup_temp: false
+  verbose: true
+  output_subdir: "results"  # Can customize output directory name
