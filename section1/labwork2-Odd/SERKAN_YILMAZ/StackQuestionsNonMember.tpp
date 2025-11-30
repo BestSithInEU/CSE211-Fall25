@@ -1,0 +1,44 @@
+#ifndef STACK_QUESTIONS_NON_MEMBER_TPP
+#define STACK_QUESTIONS_NON_MEMBER_TPP
+
+#include "StackQuestionsNonMember.h"
+
+namespace StackUtils {
+
+// ============================================================================
+// Question 3: Is Subsequence
+// ============================================================================
+template <typename T>
+bool isSubsequence(const Stack<T> &mainStack, const Stack<T> &potential) {
+  // TODO: IMPLEMENTATION
+
+
+    Stack<T> ana = mainStack;
+
+    Stack<T> alt = potential;
+
+
+    while (!ana.empty() && !alt.empty()) {
+
+        if (ana.top() == alt.top()) {
+
+                alt.pop();
+
+                ana.pop();
+
+        } else {
+
+                ana.pop();
+
+        }
+    }
+
+
+    return alt.empty();
+
+
+}
+
+}
+
+#endif // STACK_QUESTIONS_NON_MEMBER_TPP
