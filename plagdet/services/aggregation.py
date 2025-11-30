@@ -202,6 +202,64 @@ class AggregationService:
             writer.writeheader()
             writer.writerows(output_rows)
 
+        # Also write unique_names.csv with per-student statistics
+        self._write_unique_names(output_path.parent, output_rows)
+
+    def _write_unique_names(
+        self,
+        output_dir: Path,
+        output_rows: List[Dict[str, str]],
+    ) -> None:
+        """Write unique student names with similarity scores.
+
+        Args:
+            output_dir: Directory to write unique_names.csv
+            output_rows: Aggregated rows with pair data
+        """
+        # Compute per-student statistics
+        student_scores: Dict[str, List[float]] = defaultdict(list)
+        student_max_partner: Dict[str, Tuple[float, str]] = {}
+
+        for row in output_rows:
+            first = row['First Submission']
+            second = row['Second Submission']
+            avg_score = float(row.get('Average', 0))
+
+            # Add score for both students
+            student_scores[first].append(avg_score)
+            student_scores[second].append(avg_score)
+
+            # Track max score and partner
+            if first not in student_max_partner or avg_score > student_max_partner[first][0]:
+                student_max_partner[first] = (avg_score, second)
+            if second not in student_max_partner or avg_score > student_max_partner[second][0]:
+                student_max_partner[second] = (avg_score, first)
+
+        unique_path = output_dir / "unique_names.csv"
+
+        with open(unique_path, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Name', 'Max Score', 'Avg Score', 'Highest Match With', 'Pair Count'])
+
+            # Sort by max score (highest first)
+            sorted_names = sorted(
+                student_scores.keys(),
+                key=lambda n: student_max_partner.get(n, (0, ''))[0],
+                reverse=True
+            )
+
+            for name in sorted_names:
+                scores = student_scores.get(name, [])
+                if scores:
+                    max_score = max(scores)
+                    avg_score = sum(scores) / len(scores)
+                    max_partner = student_max_partner.get(name, (0, ''))[1]
+                    pair_count = len(scores)
+                    writer.writerow([name, f"{max_score:.1f}", f"{avg_score:.1f}", max_partner, pair_count])
+
+        if self.verbose:
+            print_info(f"Wrote {len(student_scores)} students to {unique_path}")
+
     def aggregate_from_json_files(
         self,
         target_path: Path,
