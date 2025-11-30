@@ -1,0 +1,128 @@
+// src/LinkedListQuestions.cpp
+#include "LinkedListQuestions.h"
+
+#include <iostream>
+#include <vector>
+
+template <typename T>
+size_t countOccurrences(const LinkedList<T>& list, const T& value) {
+  size_t count = 0;
+  Node<T>* current = list.head;
+  
+  while (current != nullptr) {
+    if (current->data == value) {
+      count++;
+    }
+    current = current->next;
+  }
+  
+  return count;
+}
+
+template <typename T>
+void swapAdjacent(LinkedList<T>& list) {
+  if (list.head == nullptr || list.head->next == nullptr) {
+    return;
+  }
+  
+  Node<T>* prev = nullptr;
+  Node<T>* current = list.head;
+  
+  list.head = current->next;
+  
+  while (current != nullptr && current->next != nullptr) {
+    Node<T>* first = current;
+    Node<T>* second = current->next;
+    Node<T>* nextPair = second->next;
+    
+    second->next = first;
+    first->next = nextPair;
+    
+    if (prev != nullptr) {
+      prev->next = second;
+    }
+    
+    prev = first;
+    current = nextPair;
+  }
+}
+
+template <typename T>
+void rotateRight(LinkedList<T>& list, size_t k) {
+  if (list.head == nullptr || list.head->next == nullptr || k == 0) {
+    return;
+  }
+  
+  size_t length = 0;
+  Node<T>* current = list.head;
+  Node<T>* tail = nullptr;
+  
+  while (current != nullptr) {
+    length++;
+    if (current->next == nullptr) {
+      tail = current;
+    }
+    current = current->next;
+  }
+  
+  k = k % length;
+  
+  if (k == 0) {
+    return;
+  }
+  
+  size_t stepsToNewTail = length - k - 1;
+  Node<T>* newTail = list.head;
+  
+  for (size_t i = 0; i < stepsToNewTail; i++) {
+    newTail = newTail->next;
+  }
+  
+  Node<T>* newHead = newTail->next;
+  
+  newTail->next = nullptr;
+  tail->next = list.head;
+  list.head = newHead;
+}
+
+template <typename T>
+void partitionAroundValue(LinkedList<T>& list, const T& pivot) {
+  if (list.head == nullptr || list.head->next == nullptr) {
+    return;
+  }
+  
+  Node<T> lessDummy(T());
+  Node<T> greaterDummy(T());
+  
+  Node<T>* lessTail = &lessDummy;
+  Node<T>* greaterTail = &greaterDummy;
+  
+  Node<T>* current = list.head;
+  
+  while (current != nullptr) {
+    Node<T>* next = current->next;
+    
+    if (current->data < pivot) {
+      lessTail->next = current;
+      lessTail = current;
+    } else {
+      greaterTail->next = current;
+      greaterTail = current;
+    }
+    
+    current->next = nullptr;
+    current = next;
+  }
+  
+  lessTail->next = greaterDummy.next;
+  list.head = lessDummy.next;
+  
+  if (list.head == nullptr) {
+    list.head = greaterDummy.next;
+  }
+}
+
+template size_t countOccurrences(const LinkedList<int>&, const int&);
+template void swapAdjacent(LinkedList<int>&);
+template void rotateRight(LinkedList<int>&, size_t);
+template void partitionAroundValue(LinkedList<int>&, const int&);
