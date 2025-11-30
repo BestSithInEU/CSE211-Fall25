@@ -14,9 +14,11 @@ try:
     import plotly.graph_objects as go
     import plotly.express as px
     import networkx as nx
+    import numpy as np
     PLOTLY_AVAILABLE = True
 except ImportError:
     PLOTLY_AVAILABLE = False
+    np = None  # Fallback
 
 from ..ui.formatters import print_error, print_info, print_success
 
@@ -26,6 +28,38 @@ class ReportHandler:
 
     Generates student-centric, human-readable reports from aggregated results.
     """
+
+    # Detector metadata for multi-detector analysis
+    DETECTOR_INFO = {
+        'jplag': {
+            'technique': 'TOKEN',
+            'name': 'JPlag',
+            'description': 'Token-based comparison',
+            'catches': 'Variable renaming, statement reordering',
+            'misses': 'Structural refactoring, AST changes'
+        },
+        'dolos': {
+            'technique': 'AST',
+            'name': 'Dolos',
+            'description': 'Abstract Syntax Tree comparison',
+            'catches': 'Structural similarity, logic copying',
+            'misses': 'Surface-level changes only'
+        },
+        'moss': {
+            'technique': 'NGRAM',
+            'name': 'MOSS',
+            'description': 'Fingerprint/k-gram matching',
+            'catches': 'Near-exact copies, common substrings',
+            'misses': 'Significant code restructuring'
+        },
+        'copydetect': {
+            'technique': 'NGRAM',
+            'name': 'CopyDetect',
+            'description': 'N-gram based detection',
+            'catches': 'Character sequences, local similarity',
+            'misses': 'AST-level transformations'
+        }
+    }
 
     # Severity thresholds
     CRITICAL_THRESHOLD = 80.0  # Red - Very likely plagiarism
@@ -158,13 +192,436 @@ class ReportHandler:
         return "green"
 
     # ========================
+    # THRESHOLD SUGGESTION
+    # ========================
+
+    def _suggest_thresholds(self, pairs: list, student_stats: dict) -> dict:
+        """Suggest thresholds based on statistical analysis.
+
+        Uses a hybrid approach:
+        1. Modified Z-Score (MAD) for outlier detection (Critical)
+        2. Percentile-based for relative ranking (High/Medium)
+        3. Detector agreement for confidence weighting
+        """
+        if np is None:
+            # Fallback if numpy not available
+            return {
+                'critical': 80.0, 'high': 60.0, 'medium': 40.0,
+                'confidence': 'low', 'stats': {}, 'counts': {}
+            }
+
+        scores = [s['max_score'] for s in student_stats.values()]
+        n = len(scores)
+
+        if n < 5:
+            # Too few students, use defaults
+            return {
+                'critical': 80.0, 'high': 60.0, 'medium': 40.0,
+                'confidence': 'low',
+                'stats': {'n': n, 'reason': 'Too few students for statistical analysis'},
+                'counts': {'critical': 0, 'high': 0, 'medium': 0}
+            }
+
+        # Robust statistics
+        scores_arr = np.array(scores)
+        median = float(np.median(scores_arr))
+        mad = float(np.median(np.abs(scores_arr - median)))  # Median Absolute Deviation
+        p75, p90, p95 = [float(x) for x in np.percentile(scores_arr, [75, 90, 95])]
+
+        # Modified Z-score threshold for outliers (Critical)
+        # k = 1.4826 is the consistency constant for normal distribution
+        k = 1.4826
+        if mad > 0:
+            # Outliers where Modified Z-score > 2.5
+            critical = median + 2.5 * k * mad
+        else:
+            # If MAD is 0 (all scores identical), use P95
+            critical = p95
+
+        # Percentile-based for High/Medium
+        high = p90
+        medium = p75
+
+        # Ensure separation and apply minimum floors
+        MIN_CRITICAL, MIN_HIGH, MIN_MEDIUM = 70.0, 50.0, 30.0
+        MAX_CRITICAL = 95.0
+
+        critical = max(MIN_CRITICAL, min(MAX_CRITICAL, critical))
+        high = max(MIN_HIGH, min(critical - 10, high))
+        medium = max(MIN_MEDIUM, min(high - 10, medium))
+
+        # Ensure minimum 10% gap between thresholds
+        if critical - high < 10:
+            high = critical - 10
+        if high - medium < 10:
+            medium = high - 10
+
+        # Round to nice values
+        critical = round(critical, 0)
+        high = round(high, 0)
+        medium = round(medium, 0)
+
+        # Count students in each category
+        counts = {
+            'critical': sum(1 for s in scores if s >= critical),
+            'high': sum(1 for s in scores if high <= s < critical),
+            'medium': sum(1 for s in scores if medium <= s < high),
+            'low': sum(1 for s in scores if s < medium)
+        }
+
+        # Compute confidence based on detector agreement
+        if pairs:
+            multi_detector_pairs = sum(1 for p in pairs if p.get('count', 1) >= 2)
+            agreement_ratio = multi_detector_pairs / len(pairs)
+            if agreement_ratio > 0.7:
+                confidence = 'high'
+            elif agreement_ratio > 0.4:
+                confidence = 'medium'
+            else:
+                confidence = 'low'
+        else:
+            confidence = 'low'
+
+        return {
+            'critical': critical,
+            'high': high,
+            'medium': medium,
+            'confidence': confidence,
+            'stats': {
+                'n': n,
+                'median': round(median, 1),
+                'mad': round(mad, 1),
+                'p75': round(p75, 1),
+                'p90': round(p90, 1),
+                'p95': round(p95, 1)
+            },
+            'counts': counts
+        }
+
+    def _create_suggestion_html(self, suggestions: dict) -> str:
+        """Generate HTML for the threshold suggestion card."""
+        stats = suggestions.get('stats', {})
+        counts = suggestions.get('counts', {})
+        confidence = suggestions.get('confidence', 'low')
+
+        confidence_colors = {'high': '#2ed573', 'medium': '#ffa502', 'low': '#ff4757'}
+        confidence_color = confidence_colors.get(confidence, '#888')
+
+        html = f"""
+    <div class="suggestion-card">
+        <h3>📊 Suggested Thresholds</h3>
+        <p class="suggestion-subtitle">Based on statistical analysis of this dataset</p>
+        <div class="suggestions-grid">
+            <div class="suggestion-item critical">
+                <div class="suggestion-label">Critical</div>
+                <div class="suggestion-value">≥ {suggestions['critical']:.0f}%</div>
+                <div class="suggestion-count">{counts.get('critical', 0)} students</div>
+            </div>
+            <div class="suggestion-item high">
+                <div class="suggestion-label">High</div>
+                <div class="suggestion-value">≥ {suggestions['high']:.0f}%</div>
+                <div class="suggestion-count">{counts.get('high', 0)} students</div>
+            </div>
+            <div class="suggestion-item medium">
+                <div class="suggestion-label">Medium</div>
+                <div class="suggestion-value">≥ {suggestions['medium']:.0f}%</div>
+                <div class="suggestion-count">{counts.get('medium', 0)} students</div>
+            </div>
+        </div>
+        <div class="suggestion-stats">
+            <span>📈 {stats.get('n', 0)} students | Median: {stats.get('median', 0):.1f}% | MAD: {stats.get('mad', 0):.1f}</span>
+            <span class="confidence-badge" style="background: {confidence_color};">
+                Confidence: {confidence.upper()}
+            </span>
+        </div>
+    </div>
+"""
+        return html
+
+    # ========================
+    # MULTI-DETECTOR ANALYSIS
+    # ========================
+
+    def _compute_detector_confidence(self, pair: dict, detectors: list, min_score: float = 50.0) -> dict:
+        """Compute confidence based on detector agreement and technique diversity.
+
+        Args:
+            pair: The pair data with scores
+            detectors: List of detector names
+            min_score: Minimum score to consider a detector as "finding" plagiarism.
+                       A score of 22% should NOT count as agreement - that's saying "not similar".
+        """
+        # Get which detectors found this pair with meaningful similarity
+        # A detector only "agrees" if its score is above the minimum threshold
+        found_by = []
+        for d in detectors:
+            d_lower = d.lower()
+            score = pair['scores'].get(d)
+            # Only count if score exists AND is above the meaningful threshold
+            if score is not None and score >= min_score:
+                found_by.append(d_lower)
+
+        if not found_by:
+            return {
+                'level': 'none',
+                'score': 0.0,
+                'detectors_found': [],
+                'techniques': [],
+                'explanation': 'No detectors found significant similarity'
+            }
+
+        # Get unique techniques
+        techniques = set()
+        for d in found_by:
+            if d in self.DETECTOR_INFO:
+                techniques.add(self.DETECTOR_INFO[d]['technique'])
+
+        # Compute confidence based on count and diversity
+        detector_count = len(found_by)
+        technique_count = len(techniques)
+
+        if detector_count >= 3:
+            confidence = 'very_high'
+            conf_score = 0.95
+        elif technique_count >= 2:
+            confidence = 'high'
+            conf_score = 0.85
+        elif detector_count >= 2:
+            confidence = 'medium'
+            conf_score = 0.70
+        else:
+            confidence = 'low'
+            conf_score = 0.50
+
+        return {
+            'level': confidence,
+            'score': conf_score,
+            'detectors_found': found_by,
+            'techniques': list(techniques),
+            'explanation': self._generate_explanation(found_by, techniques)
+        }
+
+    def _generate_explanation(self, found_by: list, techniques: set) -> str:
+        """Generate human-readable explanation of detector agreement/disagreement."""
+        if not found_by:
+            return "No significant similarity detected"
+
+        technique_list = list(techniques)
+
+        # All detectors agree (4 detectors)
+        if len(found_by) >= 4:
+            return "All detectors agree - very strong evidence"
+
+        # Multiple techniques agree
+        if 'AST' in techniques and 'TOKEN' in techniques:
+            return "Structure + tokens match - strong evidence of copying"
+
+        if 'AST' in techniques and 'NGRAM' in techniques:
+            return "Structure + characters match - likely renamed variables"
+
+        if 'TOKEN' in techniques and 'NGRAM' in techniques:
+            return "Tokens + characters match - similar surface code"
+
+        # Single technique type
+        if techniques == {'AST'}:
+            return "Structural match only - code logic similar but surface differs"
+
+        if techniques == {'TOKEN'}:
+            return "Token match only - similar code surface, verify structure"
+
+        if techniques == {'NGRAM'}:
+            if len(found_by) >= 2:
+                return "Multiple n-gram detectors agree - character patterns match"
+            return "N-gram match only - character patterns similar, verify manually"
+
+        # Fallback
+        detector_names = [self.DETECTOR_INFO.get(d, {}).get('name', d) for d in found_by]
+        return f"Detected by {', '.join(detector_names)}"
+
+    def _get_recommended_action(self, pair: dict, confidence: dict, suggestions: dict) -> dict:
+        """Determine recommended action based on score and confidence."""
+        score = pair['average']
+        conf_level = confidence['level']
+        critical = suggestions.get('critical', 80)
+        high = suggestions.get('high', 60)
+        medium = suggestions.get('medium', 40)
+
+        # Very high or high confidence + critical score → INVESTIGATE
+        if conf_level in ['very_high', 'high'] and score >= critical:
+            return {
+                'action': 'INVESTIGATE',
+                'color': '#ff4757',
+                'icon': '🔴',
+                'description': 'Strong evidence - requires investigation'
+            }
+
+        # Very high or high confidence + high score → REVIEW
+        # (Fixed: was missing 'very_high' check)
+        if conf_level in ['very_high', 'high'] and score >= high:
+            return {
+                'action': 'REVIEW',
+                'color': '#ffa502',
+                'icon': '🟠',
+                'description': 'Likely plagiarism - detailed review needed'
+            }
+
+        # Very high or high confidence + medium score → CHECK
+        if conf_level in ['very_high', 'high'] and score >= medium:
+            return {
+                'action': 'CHECK',
+                'color': '#ffd43b',
+                'icon': '🟡',
+                'description': 'Multiple detectors agree - manual check recommended'
+            }
+
+        # Medium confidence + critical score → REVIEW
+        if conf_level == 'medium' and score >= critical:
+            return {
+                'action': 'REVIEW',
+                'color': '#ffa502',
+                'icon': '🟠',
+                'description': 'High score but same technique - review needed'
+            }
+
+        # Medium confidence + high score → CHECK
+        if conf_level == 'medium' and score >= high:
+            return {
+                'action': 'CHECK',
+                'color': '#ffd43b',
+                'icon': '🟡',
+                'description': 'Manual verification recommended'
+            }
+
+        # Low confidence (single detector) → VERIFY
+        if conf_level == 'low':
+            return {
+                'action': 'VERIFY',
+                'color': '#888888',
+                'icon': '⚪',
+                'description': 'Single detector - could be false positive'
+            }
+
+        # No significant confidence → MONITOR
+        return {
+            'action': 'MONITOR',
+            'color': '#2ed573',
+            'icon': '🟢',
+            'description': 'Low risk - no immediate action needed'
+        }
+
+    def _create_detector_info_html(self, detectors: list) -> str:
+        """Generate HTML for detector info panel."""
+        cards_html = ""
+        for d in detectors:
+            d_lower = d.lower()
+            info = self.DETECTOR_INFO.get(d_lower, {})
+            if info:
+                technique = info.get('technique', 'Unknown')
+                technique_colors = {'TOKEN': '#00d4ff', 'AST': '#ff6b6b', 'NGRAM': '#ffd43b'}
+                color = technique_colors.get(technique, '#888')
+                cards_html += f"""
+            <div class="detector-card">
+                <div class="detector-header">
+                    <strong>{info.get('name', d)}</strong>
+                    <span class="technique-badge" style="background: {color};">{technique}</span>
+                </div>
+                <p class="detector-desc">{info.get('description', '')}</p>
+                <div class="detector-details">
+                    <span class="catches">✓ {info.get('catches', '')}</span>
+                    <span class="misses">✗ {info.get('misses', '')}</span>
+                </div>
+            </div>"""
+
+        return f"""
+    <div class="detector-info-panel">
+        <h3>🔍 Detection Techniques Used</h3>
+        <div class="detector-grid">{cards_html}
+        </div>
+    </div>
+"""
+
+    def _create_action_definitions_html(self) -> str:
+        """Generate HTML for action definitions panel."""
+        actions = [
+            {
+                'icon': '🔴',
+                'name': 'INVESTIGATE',
+                'color': '#ff4757',
+                'when': 'High confidence + Critical score (≥89%)',
+                'meaning': 'Strong evidence of plagiarism. Multiple detectors using different techniques report very high similarity. Requires immediate investigation - compare the code directly.'
+            },
+            {
+                'icon': '🟠',
+                'name': 'REVIEW',
+                'color': '#ffa502',
+                'when': 'High confidence + High score (≥77%)',
+                'meaning': 'Likely plagiarism. Multiple techniques agree on high similarity. Detailed manual review needed - examine actual code structure and logic.'
+            },
+            {
+                'icon': '🟡',
+                'name': 'CHECK',
+                'color': '#ffd43b',
+                'when': 'High confidence + Medium score, or Medium confidence + High score',
+                'meaning': 'Possible plagiarism. Detectors agree but scores aren\'t extreme. Quick manual verification recommended.'
+            },
+            {
+                'icon': '⚪',
+                'name': 'VERIFY',
+                'color': '#888888',
+                'when': 'Low confidence (single detector)',
+                'meaning': 'Uncertain - could be false positive. Only one detector flagged this pair. Similarity might be coincidental (common algorithms, starter code). Verify before acting.'
+            },
+            {
+                'icon': '🟢',
+                'name': 'MONITOR',
+                'color': '#2ed573',
+                'when': 'Score below all thresholds',
+                'meaning': 'Low risk. Even if detectors agree, similarity is below concerning levels. No immediate action needed.'
+            }
+        ]
+
+        cards_html = ""
+        for action in actions:
+            cards_html += f"""
+            <div class="action-def-card">
+                <div class="action-def-header">
+                    <span class="action-def-badge" style="background: {action['color']};">{action['icon']} {action['name']}</span>
+                </div>
+                <p class="action-def-when"><strong>When:</strong> {action['when']}</p>
+                <p class="action-def-meaning">{action['meaning']}</p>
+            </div>"""
+
+        return f"""
+    <div class="action-definitions-panel">
+        <h3>📋 Action Definitions</h3>
+        <div class="action-def-grid">{cards_html}
+        </div>
+    </div>
+"""
+
+    # ========================
     # PLOTLY VISUALIZATIONS
     # ========================
 
-    def _create_heatmap(self, pairs: list, student_stats: dict) -> str:
+    def _create_heatmap(self, pairs: list, student_stats: dict, suggestions: dict = None) -> str:
         """Create similarity heatmap matrix as HTML div."""
         if not PLOTLY_AVAILABLE:
             return ""
+
+        # Use suggested thresholds or defaults (normalized to 0-1 for colorscale)
+        critical = (suggestions.get('critical', 80) / 100) if suggestions else 0.8
+        high = (suggestions.get('high', 60) / 100) if suggestions else 0.6
+        medium = (suggestions.get('medium', 40) / 100) if suggestions else 0.4
+
+        # Ensure colorscale values are monotonically increasing with proper spacing
+        # Apply minimum gaps to prevent overlapping color stops
+        if medium >= high - 0.05:
+            medium = high - 0.05
+        if high >= critical - 0.05:
+            high = critical - 0.05
+        medium = max(0.1, medium)
+        high = max(medium + 0.05, high)
+        critical = max(high + 0.05, min(0.95, critical))
 
         # Get all students sorted by max score (high risk first)
         students = sorted(
@@ -185,19 +642,22 @@ class ReportHandler:
                 matrix[i][j] = pair['average']
                 matrix[j][i] = pair['average']
 
-        # Create heatmap
+        # Create heatmap with dynamic colorscale based on suggested thresholds
+        # Ensure strictly increasing values for colorscale
+        colorscale_stops = [
+            [0.0, '#1a1a2e'],           # Dark blue for 0%
+            [medium * 0.5, '#16213e'],  # Darker blue for low values
+            [medium, '#ffd43b'],        # Yellow at medium threshold
+            [high, '#ffa502'],          # Orange at high threshold
+            [critical, '#ff4757'],      # Red at critical threshold
+            [1.0, '#ff0000'],           # Bright red for 100%
+        ]
+
         fig = go.Figure(data=go.Heatmap(
             z=matrix,
             x=students,
             y=students,
-            colorscale=[
-                [0.0, '#1a1a2e'],      # Dark blue for 0%
-                [0.4, '#16213e'],      # Darker blue for <40%
-                [0.5, '#ffd43b'],      # Yellow for 50%
-                [0.6, '#ffa502'],      # Orange for 60%
-                [0.8, '#ff4757'],      # Red for 80%
-                [1.0, '#ff0000'],      # Bright red for 100%
-            ],
+            colorscale=colorscale_stops,
             zmin=0, zmax=100,
             hoverongaps=False,
             hovertemplate='%{y} ↔ %{x}<br>Similarity: %{z:.1f}%<extra></extra>',
@@ -228,10 +688,14 @@ class ReportHandler:
 
         return fig.to_html(full_html=False, include_plotlyjs=False)
 
-    def _create_network_graph(self, pairs: list, threshold: float = 50.0) -> str:
+    def _create_network_graph(self, pairs: list, threshold: float = 50.0, suggestions: dict = None) -> str:
         """Create network graph showing student similarity connections."""
         if not PLOTLY_AVAILABLE:
             return ""
+
+        # Use suggested thresholds or defaults
+        critical = suggestions.get('critical', 80) if suggestions else 80
+        high = suggestions.get('high', 60) if suggestions else 60
 
         # Filter pairs above threshold
         high_sim_pairs = [p for p in pairs if p['average'] >= threshold]
@@ -250,18 +714,18 @@ class ReportHandler:
         # Layout
         pos = nx.spring_layout(G, k=2, iterations=50, seed=42)
 
-        # Edge traces (colored by similarity)
+        # Edge traces (colored by similarity using suggested thresholds)
         edge_traces = []
         for edge in G.edges(data=True):
             x0, y0 = pos[edge[0]]
             x1, y1 = pos[edge[1]]
             weight = edge[2]['weight']
 
-            # Color based on severity
-            if weight >= self.CRITICAL_THRESHOLD:
+            # Color based on suggested thresholds
+            if weight >= critical:
                 color = '#ff4757'
                 width = 3
-            elif weight >= self.HIGH_THRESHOLD:
+            elif weight >= high:
                 color = '#ffa502'
                 width = 2
             else:
@@ -335,10 +799,15 @@ class ReportHandler:
 
         return fig.to_html(full_html=False, include_plotlyjs=False)
 
-    def _create_bar_chart(self, student_stats: dict) -> str:
+    def _create_bar_chart(self, student_stats: dict, suggestions: dict = None) -> str:
         """Create bar chart showing per-student risk scores."""
         if not PLOTLY_AVAILABLE:
             return ""
+
+        # Use suggested thresholds or defaults
+        critical = suggestions.get('critical', 80) if suggestions else 80
+        high = suggestions.get('high', 60) if suggestions else 60
+        medium = suggestions.get('medium', 40) if suggestions else 40
 
         # Sort by max score
         sorted_students = sorted(
@@ -351,14 +820,14 @@ class ReportHandler:
         max_scores = [s[1]['max_score'] for s in sorted_students]
         avg_scores = [s[1]['avg_score'] for s in sorted_students]
 
-        # Color based on risk level
+        # Color based on suggested thresholds
         colors = []
         for score in max_scores:
-            if score >= self.CRITICAL_THRESHOLD:
+            if score >= critical:
                 colors.append('#ff4757')
-            elif score >= self.HIGH_THRESHOLD:
+            elif score >= high:
                 colors.append('#ffa502')
-            elif score >= self.MEDIUM_THRESHOLD:
+            elif score >= medium:
                 colors.append('#ffd43b')
             else:
                 colors.append('#2ed573')
@@ -385,11 +854,11 @@ class ReportHandler:
             hovertemplate='%{x}<br>Avg: %{y:.1f}%<extra></extra>'
         ))
 
-        # Threshold lines
-        fig.add_hline(y=80, line_dash="dash", line_color="#ff4757",
-                      annotation_text="Critical (80%)", annotation_position="right")
-        fig.add_hline(y=60, line_dash="dash", line_color="#ffa502",
-                      annotation_text="High (60%)", annotation_position="right")
+        # Threshold lines using suggested values
+        fig.add_hline(y=critical, line_dash="dash", line_color="#ff4757",
+                      annotation_text=f"Critical ({critical:.0f}%)", annotation_position="right")
+        fig.add_hline(y=high, line_dash="dash", line_color="#ffa502",
+                      annotation_text=f"High ({high:.0f}%)", annotation_position="right")
 
         fig.update_layout(
             title=dict(text='Student Risk Scores', font=dict(color='#00d4ff')),
@@ -416,13 +885,18 @@ class ReportHandler:
 
         return fig.to_html(full_html=False, include_plotlyjs=False)
 
-    def _create_histogram(self, student_stats: dict) -> str:
+    def _create_histogram(self, student_stats: dict, suggestions: dict = None) -> str:
         """Create histogram of student risk score distribution."""
         if not PLOTLY_AVAILABLE:
             return ""
 
         # Use max_score per student (not pair averages)
         scores = [s['max_score'] for s in student_stats.values()]
+
+        # Use suggested thresholds or defaults
+        critical = suggestions.get('critical', 80) if suggestions else 80
+        high = suggestions.get('high', 60) if suggestions else 60
+        medium = suggestions.get('medium', 40) if suggestions else 40
 
         fig = go.Figure()
 
@@ -436,13 +910,13 @@ class ReportHandler:
             hovertemplate='Range: %{x:.0f}%<br>Students: %{y}<extra></extra>'
         ))
 
-        # Add threshold regions
-        fig.add_vrect(x0=80, x1=100, fillcolor="#ff4757", opacity=0.2,
-                      annotation_text="Critical", annotation_position="top")
-        fig.add_vrect(x0=60, x1=80, fillcolor="#ffa502", opacity=0.2,
-                      annotation_text="High", annotation_position="top")
-        fig.add_vrect(x0=40, x1=60, fillcolor="#ffd43b", opacity=0.2,
-                      annotation_text="Medium", annotation_position="top")
+        # Add threshold regions using suggested values
+        fig.add_vrect(x0=critical, x1=100, fillcolor="#ff4757", opacity=0.2,
+                      annotation_text=f"Critical (≥{critical:.0f}%)", annotation_position="top")
+        fig.add_vrect(x0=high, x1=critical, fillcolor="#ffa502", opacity=0.2,
+                      annotation_text=f"High (≥{high:.0f}%)", annotation_position="top")
+        fig.add_vrect(x0=medium, x1=high, fillcolor="#ffd43b", opacity=0.2,
+                      annotation_text=f"Medium (≥{medium:.0f}%)", annotation_position="top")
 
         fig.update_layout(
             title=dict(text='Student Risk Score Distribution', font=dict(color='#00d4ff')),
@@ -612,11 +1086,19 @@ class ReportHandler:
             reverse=True
         )
 
-        # Generate charts
-        heatmap_html = self._create_heatmap(pairs, student_stats)
-        network_html = self._create_network_graph(pairs, threshold)
-        bar_chart_html = self._create_bar_chart(student_stats)
-        histogram_html = self._create_histogram(student_stats)
+        # Generate threshold suggestions first (needed for charts)
+        suggestions = self._suggest_thresholds(pairs, student_stats)
+        suggestion_html = self._create_suggestion_html(suggestions)
+
+        # Generate charts (all use suggested thresholds)
+        heatmap_html = self._create_heatmap(pairs, student_stats, suggestions)
+        network_html = self._create_network_graph(pairs, threshold, suggestions)
+        bar_chart_html = self._create_bar_chart(student_stats, suggestions)
+        histogram_html = self._create_histogram(student_stats, suggestions)
+
+        # Generate detector info panel and action definitions
+        detector_info_html = self._create_detector_info_html(detectors)
+        action_definitions_html = self._create_action_definitions_html()
 
         # Plotly JS CDN
         plotly_cdn = '<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>' if PLOTLY_AVAILABLE else ''
@@ -699,6 +1181,127 @@ class ReportHandler:
         .tab-button.active {{ background: #0f3460; color: #00d4ff; }}
         .tab-content {{ display: none; }}
         .tab-content.active {{ display: block; }}
+        .suggestion-card {{
+            background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+            border: 1px solid #0f3460; border-radius: 12px;
+            padding: 20px; margin: 25px 0;
+        }}
+        .suggestion-card h3 {{
+            color: #00d4ff; margin: 0 0 5px 0; font-size: 1.2em;
+        }}
+        .suggestion-subtitle {{
+            color: #888; font-size: 0.85em; margin: 0 0 15px 0;
+        }}
+        .suggestions-grid {{
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
+        }}
+        .suggestion-item {{
+            background: #0f3460; border-radius: 8px; padding: 15px; text-align: center;
+        }}
+        .suggestion-item.critical {{ border-top: 3px solid #ff4757; }}
+        .suggestion-item.high {{ border-top: 3px solid #ffa502; }}
+        .suggestion-item.medium {{ border-top: 3px solid #ffd43b; }}
+        .suggestion-label {{
+            font-size: 0.8em; color: #888; text-transform: uppercase; letter-spacing: 1px;
+        }}
+        .suggestion-value {{
+            font-size: 1.8em; font-weight: bold; margin: 5px 0;
+        }}
+        .suggestion-item.critical .suggestion-value {{ color: #ff4757; }}
+        .suggestion-item.high .suggestion-value {{ color: #ffa502; }}
+        .suggestion-item.medium .suggestion-value {{ color: #ffd43b; }}
+        .suggestion-count {{
+            font-size: 0.85em; color: #aaa;
+        }}
+        .suggestion-stats {{
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 15px; padding-top: 15px; border-top: 1px solid #0f3460;
+            font-size: 0.85em; color: #888;
+        }}
+        .confidence-badge {{
+            padding: 4px 10px; border-radius: 12px; font-size: 0.75em;
+            font-weight: bold; color: #1a1a2e;
+        }}
+        @media (max-width: 600px) {{
+            .suggestions-grid {{ grid-template-columns: 1fr; }}
+        }}
+        /* Detector Info Panel */
+        .detector-info-panel {{
+            background: #16213e; border-radius: 10px; padding: 20px; margin: 20px 0;
+        }}
+        .detector-info-panel h3 {{
+            color: #00d4ff; margin: 0 0 15px 0;
+        }}
+        .detector-grid {{
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;
+        }}
+        .detector-card {{
+            background: #0f3460; border-radius: 8px; padding: 15px;
+        }}
+        .detector-header {{
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+        }}
+        .technique-badge {{
+            padding: 2px 8px; border-radius: 10px; font-size: 0.7em;
+            font-weight: bold; color: #1a1a2e;
+        }}
+        .detector-desc {{
+            color: #aaa; font-size: 0.85em; margin: 0 0 10px 0;
+        }}
+        .detector-details {{
+            font-size: 0.8em;
+        }}
+        .detector-details .catches {{
+            color: #2ed573; display: block; margin-bottom: 4px;
+        }}
+        .detector-details .misses {{
+            color: #ff6b6b; display: block;
+        }}
+        /* Action Definitions Panel */
+        .action-definitions-panel {{
+            background: #16213e; border-radius: 10px; padding: 20px; margin: 20px 0;
+        }}
+        .action-definitions-panel h3 {{
+            color: #00d4ff; margin: 0 0 15px 0;
+        }}
+        .action-def-grid {{
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;
+        }}
+        .action-def-card {{
+            background: #0f3460; border-radius: 8px; padding: 15px;
+        }}
+        .action-def-header {{
+            margin-bottom: 10px;
+        }}
+        .action-def-badge {{
+            padding: 5px 12px; border-radius: 6px; font-size: 0.9em;
+            font-weight: bold; color: #1a1a2e; display: inline-block;
+        }}
+        .action-def-when {{
+            color: #aaa; font-size: 0.85em; margin: 8px 0;
+        }}
+        .action-def-when strong {{
+            color: #00d4ff;
+        }}
+        .action-def-meaning {{
+            color: #ddd; font-size: 0.85em; margin: 0; line-height: 1.4;
+        }}
+        /* Table Confidence & Action Badges */
+        .conf-badge {{
+            padding: 3px 8px; border-radius: 4px; font-size: 0.75em;
+            font-weight: bold; display: inline-block;
+        }}
+        .conf-badge.very_high {{ background: #2ed573; color: #1a1a2e; }}
+        .conf-badge.high {{ background: #00d4ff; color: #1a1a2e; }}
+        .conf-badge.medium {{ background: #ffa502; color: #1a1a2e; }}
+        .conf-badge.low {{ background: #888; color: #eee; }}
+        .action-badge {{
+            padding: 4px 10px; border-radius: 4px; font-size: 0.8em;
+            font-weight: bold; display: inline-block; color: #1a1a2e;
+        }}
+        .explanation-text {{
+            font-size: 0.75em; color: #888; display: block; margin-top: 4px;
+        }}
     </style>
 </head>
 <body>
@@ -724,10 +1327,16 @@ class ReportHandler:
     </div>
 
     <div class="legend">
-        <div class="legend-item"><div class="legend-dot critical"></div> Critical (≥80%) - Very likely plagiarism</div>
-        <div class="legend-item"><div class="legend-dot high"></div> High (≥60%) - Suspicious</div>
-        <div class="legend-item"><div class="legend-dot medium"></div> Medium (≥40%) - Review recommended</div>
+        <div class="legend-item"><div class="legend-dot critical"></div> Critical (≥{suggestions['critical']:.0f}%) - Very likely plagiarism</div>
+        <div class="legend-item"><div class="legend-dot high"></div> High (≥{suggestions['high']:.0f}%) - Suspicious</div>
+        <div class="legend-item"><div class="legend-dot medium"></div> Medium (≥{suggestions['medium']:.0f}%) - Review recommended</div>
     </div>
+
+    {suggestion_html}
+
+    {detector_info_html}
+
+    {action_definitions_html}
 
     <!-- Visualizations Section -->
     <h2>Visual Analysis</h2>
@@ -810,16 +1419,25 @@ class ReportHandler:
             html += f"                <th>{det}</th>\n"
 
         html += """                <th>Average</th>
-                <th>Risk</th>
+                <th>Confidence</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
 """
 
         for i, pair in enumerate(flagged, 1):
-            score_class = 'critical' if pair['average'] >= 80 else 'high' if pair['average'] >= 60 else 'medium'
-            badge_class = score_class
-            badge_text = 'CRITICAL' if pair['average'] >= 80 else 'HIGH' if pair['average'] >= 60 else 'MEDIUM'
+            # Compute confidence and action
+            # Use 50% as minimum for detector agreement - anything below is "not similar"
+            min_agreement_score = max(50.0, suggestions.get('medium', 50))
+            confidence = self._compute_detector_confidence(pair, detectors, min_agreement_score)
+            action = self._get_recommended_action(pair, confidence, suggestions)
+
+            # Score class based on suggested thresholds
+            critical = suggestions.get('critical', 80)
+            high = suggestions.get('high', 60)
+            medium = suggestions.get('medium', 40)
+            score_class = 'critical' if pair['average'] >= critical else 'high' if pair['average'] >= high else 'medium' if pair['average'] >= medium else 'low'
 
             html += f"""            <tr>
                 <td>{i}</td>
@@ -834,7 +1452,13 @@ class ReportHandler:
                     html += "                <td>-</td>\n"
 
             html += f"""                <td class="{score_class}">{pair['average']:.1f}%</td>
-                <td><span class="badge {badge_class}">{badge_text}</span></td>
+                <td>
+                    <span class="conf-badge {confidence['level']}">{confidence['level'].upper().replace('_', ' ')}</span>
+                    <span class="explanation-text">{confidence['explanation']}</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: {action['color']};">{action['icon']} {action['action']}</span>
+                </td>
             </tr>
 """
 
