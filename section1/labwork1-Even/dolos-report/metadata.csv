@@ -1,0 +1,17 @@
+property,value,type
+reportName,LinkedListQuestions.cpp & LinkedListQuestions.cpp,string
+kgramLength,23,number
+kgramsInWindow,17,number
+language,cpp,string
+maxFingerprintCount,null,object
+maxFingerprintPercentage,null,object
+minFragmentLength,0,number
+limitResults,null,object
+minSimilarity,0,number
+sortBy,total overlap,string
+fragmentSortBy,file order,string
+kgramData,false,boolean
+includeComments,false,boolean
+createdAt,2025-11-30T10:32:21.913Z,string
+languageDetected,false,boolean
+warnings,,object

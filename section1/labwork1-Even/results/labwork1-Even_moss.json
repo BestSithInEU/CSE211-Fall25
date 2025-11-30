@@ -1,0 +1,1693 @@
+{
+  "comparisons": [
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.82,
+      "metric": "MOSS",
+      "similarity1": 0.81,
+      "similarity2": 0.82,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.58,
+      "metric": "MOSS",
+      "similarity1": 0.56,
+      "similarity2": 0.58,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "AYSE_ALKAN",
+      "similarity": 0.57,
+      "metric": "MOSS",
+      "similarity1": 0.57,
+      "similarity2": 0.55,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.55,
+      "metric": "MOSS",
+      "similarity1": 0.51,
+      "similarity2": 0.55,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.38,
+      "metric": "MOSS",
+      "similarity1": 0.38,
+      "similarity2": 0.38,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "EMRE_ERGUL",
+      "similarity": 0.48,
+      "metric": "MOSS",
+      "similarity1": 0.48,
+      "similarity2": 0.38,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.47,
+      "metric": "MOSS",
+      "similarity1": 0.47,
+      "similarity2": 0.31,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.42,
+      "metric": "MOSS",
+      "similarity1": 0.41,
+      "similarity2": 0.42,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "AYSE_ALKAN",
+      "similarity": 0.42,
+      "metric": "MOSS",
+      "similarity1": 0.42,
+      "similarity2": 0.39,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.42,
+      "metric": "MOSS",
+      "similarity1": 0.39,
+      "similarity2": 0.42,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "SUDE_ATANSAY",
+      "similarity": 0.4,
+      "metric": "MOSS",
+      "similarity1": 0.4,
+      "similarity2": 0.39,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.39,
+      "metric": "MOSS",
+      "similarity1": 0.39,
+      "similarity2": 0.34,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.36,
+      "metric": "MOSS",
+      "similarity1": 0.35,
+      "similarity2": 0.36,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "GPT",
+      "similarity": 0.4,
+      "metric": "MOSS",
+      "similarity1": 0.4,
+      "similarity2": 0.39,
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.38,
+      "metric": "MOSS",
+      "similarity1": 0.35,
+      "similarity2": 0.38,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "SUDE_ATANSAY",
+      "similarity": 0.37,
+      "metric": "MOSS",
+      "similarity1": 0.37,
+      "similarity2": 0.35,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.41,
+      "metric": "MOSS",
+      "similarity1": 0.41,
+      "similarity2": 0.33,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_EMRE_BAYBUGA",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.41,
+      "metric": "MOSS",
+      "similarity1": 0.41,
+      "similarity2": 0.35,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "IRMAK_ZEHRA_EMRI",
+      "similarity": 0.37,
+      "metric": "MOSS",
+      "similarity1": 0.37,
+      "similarity2": 0.3,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.32,
+      "metric": "MOSS",
+      "similarity1": 0.32,
+      "similarity2": 0.29,
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.32,
+      "metric": "MOSS",
+      "similarity1": 0.32,
+      "similarity2": 0.31,
+      "extra": {}
+    },
+    {
+      "first_submission": "ERDAL_DENIZ_OZBEY",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.34,
+      "metric": "MOSS",
+      "similarity1": 0.28,
+      "similarity2": 0.34,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.31,
+      "metric": "MOSS",
+      "similarity1": 0.31,
+      "similarity2": 0.29,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "SUDE_ATANSAY",
+      "similarity": 0.31,
+      "metric": "MOSS",
+      "similarity1": 0.3,
+      "similarity2": 0.31,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_EMRE_BAYBUGA",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.38,
+      "metric": "MOSS",
+      "similarity1": 0.38,
+      "similarity2": 0.27,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.28,
+      "metric": "MOSS",
+      "similarity1": 0.26,
+      "similarity2": 0.28,
+      "extra": {}
+    },
+    {
+      "first_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.27,
+      "metric": "MOSS",
+      "similarity1": 0.25,
+      "similarity2": 0.27,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.3,
+      "metric": "MOSS",
+      "similarity1": 0.27,
+      "similarity2": 0.3,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.25,
+      "metric": "MOSS",
+      "similarity1": 0.25,
+      "similarity2": 0.25,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.27,
+      "metric": "MOSS",
+      "similarity1": 0.27,
+      "similarity2": 0.21,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.27,
+      "metric": "MOSS",
+      "similarity1": 0.27,
+      "similarity2": 0.24,
+      "extra": {}
+    },
+    {
+      "first_submission": "EMRE_ERGUL",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.25,
+      "metric": "MOSS",
+      "similarity1": 0.25,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.24,
+      "metric": "MOSS",
+      "similarity1": 0.24,
+      "similarity2": 0.24,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "ALP_EMRE_BAYBUGA",
+      "similarity": 0.33,
+      "metric": "MOSS",
+      "similarity1": 0.27,
+      "similarity2": 0.33,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.31,
+      "metric": "MOSS",
+      "similarity1": 0.31,
+      "similarity2": 0.22,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.26,
+      "metric": "MOSS",
+      "similarity1": 0.26,
+      "similarity2": 0.25,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "EMRE_ERGUL",
+      "similarity": 0.24,
+      "metric": "MOSS",
+      "similarity1": 0.24,
+      "similarity2": 0.24,
+      "extra": {}
+    },
+    {
+      "first_submission": "EMRE_ERGUL",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.24,
+      "metric": "MOSS",
+      "similarity1": 0.24,
+      "similarity2": 0.23,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.27,
+      "metric": "MOSS",
+      "similarity1": 0.27,
+      "similarity2": 0.23,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.24,
+      "metric": "MOSS",
+      "similarity1": 0.24,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "EMRE_ERGUL",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.24,
+      "metric": "MOSS",
+      "similarity1": 0.23,
+      "similarity2": 0.24,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.26,
+      "metric": "MOSS",
+      "similarity1": 0.26,
+      "similarity2": 0.23,
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.24,
+      "metric": "MOSS",
+      "similarity1": 0.24,
+      "similarity2": 0.23,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.28,
+      "metric": "MOSS",
+      "similarity1": 0.28,
+      "similarity2": 0.22,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "EMRE_ERGUL",
+      "similarity": 0.21,
+      "metric": "MOSS",
+      "similarity1": 0.21,
+      "similarity2": 0.21,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.25,
+      "metric": "MOSS",
+      "similarity1": 0.21,
+      "similarity2": 0.25,
+      "extra": {}
+    },
+    {
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.22,
+      "metric": "MOSS",
+      "similarity1": 0.22,
+      "similarity2": 0.18,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.2,
+      "similarity2": 0.19,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.24,
+      "metric": "MOSS",
+      "similarity1": 0.22,
+      "similarity2": 0.24,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.2,
+      "similarity2": 0.18,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.22,
+      "metric": "MOSS",
+      "similarity1": 0.22,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "SUDE_ATANSAY",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.2,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.19,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.19,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.22,
+      "metric": "MOSS",
+      "similarity1": 0.18,
+      "similarity2": 0.22,
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.21,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.21,
+      "extra": {}
+    },
+    {
+      "first_submission": "OMER_FARUK_GUCER",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.21,
+      "metric": "MOSS",
+      "similarity1": 0.21,
+      "similarity2": 0.18,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.2,
+      "similarity2": 0.19,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.2,
+      "similarity2": 0.18,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.19,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.18,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.18,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.18,
+      "metric": "MOSS",
+      "similarity1": 0.18,
+      "similarity2": 0.18,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.19,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.16,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "ALP_EMRE_BAYBUGA",
+      "similarity": 0.23,
+      "metric": "MOSS",
+      "similarity1": 0.18,
+      "similarity2": 0.23,
+      "extra": {}
+    },
+    {
+      "first_submission": "EGE_HURIEL",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.2,
+      "similarity2": 0.15,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.18,
+      "metric": "MOSS",
+      "similarity1": 0.18,
+      "similarity2": 0.16,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "ALP_EMRE_BAYBUGA",
+      "similarity": 0.22,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.22,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.17,
+      "metric": "MOSS",
+      "similarity1": 0.17,
+      "similarity2": 0.16,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "ALP_EMRE_BAYBUGA",
+      "similarity": 0.22,
+      "metric": "MOSS",
+      "similarity1": 0.18,
+      "similarity2": 0.22,
+      "extra": {}
+    },
+    {
+      "first_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.16,
+      "metric": "MOSS",
+      "similarity1": 0.16,
+      "similarity2": 0.13,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.16,
+      "metric": "MOSS",
+      "similarity1": 0.16,
+      "similarity2": 0.13,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.19,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.19,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.18,
+      "metric": "MOSS",
+      "similarity1": 0.18,
+      "similarity2": 0.16,
+      "extra": {}
+    },
+    {
+      "first_submission": "EGE_HURIEL",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.19,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.15,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_EMRE_BAYBUGA",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.21,
+      "metric": "MOSS",
+      "similarity1": 0.21,
+      "similarity2": 0.19,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.16,
+      "metric": "MOSS",
+      "similarity1": 0.16,
+      "similarity2": 0.13,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.18,
+      "metric": "MOSS",
+      "similarity1": 0.15,
+      "similarity2": 0.18,
+      "extra": {}
+    },
+    {
+      "first_submission": "YUSUF_ERDEM_ALTINSOY",
+      "second_submission": "IRMAK_ZEHRA_EMRI",
+      "similarity": 0.18,
+      "metric": "MOSS",
+      "similarity1": 0.18,
+      "similarity2": 0.15,
+      "extra": {}
+    },
+    {
+      "first_submission": "HIRANUR_DENIZ",
+      "second_submission": "IRMAK_ZEHRA_EMRI",
+      "similarity": 0.21,
+      "metric": "MOSS",
+      "similarity1": 0.21,
+      "similarity2": 0.15,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "EDHEM_TATAR",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.14,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.18,
+      "metric": "MOSS",
+      "similarity1": 0.17,
+      "similarity2": 0.18,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "HIRANUR_DENIZ",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "ALP_EMRE_BAYBUGA",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.16,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.14,
+      "metric": "MOSS",
+      "similarity1": 0.14,
+      "similarity2": 0.13,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "EYLUL_COSKUN",
+      "similarity": 0.18,
+      "metric": "MOSS",
+      "similarity1": 0.14,
+      "similarity2": 0.18,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.14,
+      "metric": "MOSS",
+      "similarity1": 0.14,
+      "similarity2": 0.13,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.18,
+      "metric": "MOSS",
+      "similarity1": 0.18,
+      "similarity2": 0.14,
+      "extra": {}
+    },
+    {
+      "first_submission": "EMRE_ERGUL",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.14,
+      "metric": "MOSS",
+      "similarity1": 0.14,
+      "similarity2": 0.13,
+      "extra": {}
+    },
+    {
+      "first_submission": "DEMIR_OZHAN",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.13,
+      "metric": "MOSS",
+      "similarity1": 0.12,
+      "similarity2": 0.13,
+      "extra": {}
+    },
+    {
+      "first_submission": "BARIS_SAHIN",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.2,
+      "metric": "MOSS",
+      "similarity1": 0.1,
+      "similarity2": 0.2,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "MERTCAN_ARSLAN",
+      "similarity": 0.16,
+      "metric": "MOSS",
+      "similarity1": 0.16,
+      "similarity2": 0.14,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.15,
+      "metric": "MOSS",
+      "similarity1": 0.15,
+      "similarity2": 0.13,
+      "extra": {}
+    },
+    {
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "EMRE_ERGUL",
+      "similarity": 0.14,
+      "metric": "MOSS",
+      "similarity1": 0.14,
+      "similarity2": 0.14,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_EMRE_BAYBUGA",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.19,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.17,
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.15,
+      "metric": "MOSS",
+      "similarity1": 0.15,
+      "similarity2": 0.13,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.15,
+      "metric": "MOSS",
+      "similarity1": 0.15,
+      "similarity2": 0.14,
+      "extra": {}
+    },
+    {
+      "first_submission": "HIRANUR_DENIZ",
+      "second_submission": "EMRE_ERGUL",
+      "similarity": 0.19,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.14,
+      "extra": {}
+    },
+    {
+      "first_submission": "HIRANUR_DENIZ",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.19,
+      "metric": "MOSS",
+      "similarity1": 0.19,
+      "similarity2": 0.11,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.16,
+      "metric": "MOSS",
+      "similarity1": 0.15,
+      "similarity2": 0.16,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.18,
+      "metric": "MOSS",
+      "similarity1": 0.15,
+      "similarity2": 0.18,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "IRMAK_ZEHRA_EMRI",
+      "similarity": 0.14,
+      "metric": "MOSS",
+      "similarity1": 0.13,
+      "similarity2": 0.14,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "EYLUL_COSKUN",
+      "similarity": 0.15,
+      "metric": "MOSS",
+      "similarity1": 0.13,
+      "similarity2": 0.15,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.12,
+      "metric": "MOSS",
+      "similarity1": 0.12,
+      "similarity2": 0.11,
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "EYLUL_COSKUN",
+      "similarity": 0.14,
+      "metric": "MOSS",
+      "similarity1": 0.12,
+      "similarity2": 0.14,
+      "extra": {}
+    },
+    {
+      "first_submission": "EGE_HURIEL",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.13,
+      "metric": "MOSS",
+      "similarity1": 0.13,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "EYLUL_COSKUN",
+      "similarity": 0.14,
+      "metric": "MOSS",
+      "similarity1": 0.12,
+      "similarity2": 0.14,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "EYLUL_COSKUN",
+      "similarity": 0.14,
+      "metric": "MOSS",
+      "similarity1": 0.11,
+      "similarity2": 0.14,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.11,
+      "similarity2": 0.1,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.12,
+      "metric": "MOSS",
+      "similarity1": 0.1,
+      "similarity2": 0.12,
+      "extra": {}
+    },
+    {
+      "first_submission": "YUSUF_ERDEM_ALTINSOY",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.11,
+      "similarity2": 0.11,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "YUSUF_ERDEM_ALTINSOY",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.11,
+      "similarity2": 0.11,
+      "extra": {}
+    },
+    {
+      "first_submission": "HIRANUR_DENIZ",
+      "second_submission": "CEYDA_SENAY",
+      "similarity": 0.12,
+      "metric": "MOSS",
+      "similarity1": 0.12,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "EYLUL_COSKUN",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.1,
+      "similarity2": 0.11,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.1,
+      "metric": "MOSS",
+      "similarity1": 0.1,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "BORA_ERDEM_ALAN",
+      "similarity": 0.1,
+      "metric": "MOSS",
+      "similarity1": 0.1,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.11,
+      "similarity2": 0.1,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.09,
+      "similarity2": 0.11,
+      "extra": {}
+    },
+    {
+      "first_submission": "OMER_FARUK_GUCER",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.1,
+      "metric": "MOSS",
+      "similarity1": 0.1,
+      "similarity2": 0.1,
+      "extra": {}
+    },
+    {
+      "first_submission": "DEMIR_OZHAN",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.1,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.1,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.1,
+      "metric": "MOSS",
+      "similarity1": 0.1,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_EMRE_BAYBUGA",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.11,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_EMRE_BAYBUGA",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.11,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "YUSUF_ERDEM_ALTINSOY",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.09,
+      "similarity2": 0.11,
+      "extra": {}
+    },
+    {
+      "first_submission": "YUSUF_ERDEM_ALTINSOY",
+      "second_submission": "EYLUL_COSKUN",
+      "similarity": 0.1,
+      "metric": "MOSS",
+      "similarity1": 0.09,
+      "similarity2": 0.1,
+      "extra": {}
+    },
+    {
+      "first_submission": "YUSUF_ERDEM_ALTINSOY",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.09,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.11,
+      "extra": {}
+    },
+    {
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "BARIS_SAHIN",
+      "second_submission": "ILAY_FATMA_YAVUZ",
+      "similarity": 0.11,
+      "metric": "MOSS",
+      "similarity1": 0.05,
+      "similarity2": 0.11,
+      "extra": {}
+    },
+    {
+      "first_submission": "OMER_FARUK_GUCER",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.09,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "CEYDA_SENAY",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.06,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "ALP_EMRE_BAYBUGA",
+      "similarity": 0.1,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.1,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "EMRE_ERGUL",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_EMRE_BAYBUGA",
+      "second_submission": "EYLUL_COSKUN",
+      "similarity": 0.1,
+      "metric": "MOSS",
+      "similarity1": 0.1,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_EMRE_BAYBUGA",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.1,
+      "metric": "MOSS",
+      "similarity1": 0.1,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "YUSUF_ERDEM_ALTINSOY",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "OMER_FARUK_GUCER",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "OMER_FARUK_GUCER",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "OMER_FARUK_GUCER",
+      "second_submission": "AHMET_ZEKI_IHTIYAROGLU",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "ERDAL_DENIZ_OZBEY",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.06,
+      "extra": {}
+    },
+    {
+      "first_submission": "EGE_HURIEL",
+      "second_submission": "AHMET_ZEKI_IHTIYAROGLU",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.09,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "AHMET_ZEKI_IHTIYAROGLU",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.06,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "AHMET_ZEKI_IHTIYAROGLU",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "MERTCAN_ARSLAN",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "ERDAL_DENIZ_OZBEY",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "AHMET_ZEKI_IHTIYAROGLU",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "AHMET_ZEKI_IHTIYAROGLU",
+      "second_submission": "EDHEM_TATAR",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.09,
+      "similarity2": 0.06,
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "EMRE_ERGUL",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.05,
+      "extra": {}
+    },
+    {
+      "first_submission": "SUDE_ATANSAY",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.06,
+      "extra": {}
+    },
+    {
+      "first_submission": "SERHAT_YUNUSEMRE_KALPAKLI",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.06,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.06,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "SUDE_ATANSAY",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.06,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "OMER_FARUK_GUCER",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.06,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.06,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "MERTCAN_ARSLAN",
+      "second_submission": "DENIZ_KAYRA_AYDIN",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.06,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "IRMAK_ZEHRA_EMRI",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "HIRANUR_DENIZ",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.09,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "HIRANUR_DENIZ",
+      "second_submission": "ALP_DIKMEN",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.09,
+      "similarity2": 0.06,
+      "extra": {}
+    },
+    {
+      "first_submission": "HIRANUR_DENIZ",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.09,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "GPT",
+      "second_submission": "MERTCAN_ARSLAN",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.06,
+      "extra": {}
+    },
+    {
+      "first_submission": "EYLUL_COSKUN",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "ERDAL_DENIZ_OZBEY",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.06,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "EMRE_ERGUL",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "EMRE_ERGUL",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "EGE_HURIEL",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "EGE_HURIEL",
+      "second_submission": "ALGUHAN_KURULAR",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "DENIZ_KAYRA_AYDIN",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.05,
+      "extra": {}
+    },
+    {
+      "first_submission": "DEMIR_OZHAN",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.05,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "MERTCAN_ARSLAN",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.06,
+      "extra": {}
+    },
+    {
+      "first_submission": "CLAUDE",
+      "second_submission": "BORA_ERDEM_ALAN",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.08,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "CEYDA_SENAY",
+      "second_submission": "ILAY_FATMA_YAVUZ",
+      "similarity": 0.1,
+      "metric": "MOSS",
+      "similarity1": 0.05,
+      "similarity2": 0.1,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "ISMAIL_EFE_YALCINKAYA",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "DEMIR_OZHAN",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.05,
+      "extra": {}
+    },
+    {
+      "first_submission": "BORA_ERDEM_ALAN",
+      "second_submission": "AYSE_ALKAN",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "BARIS_SAHIN",
+      "second_submission": "CEYDA_SENAY",
+      "similarity": 0.05,
+      "metric": "MOSS",
+      "similarity1": 0.04,
+      "similarity2": 0.05,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "IRMAK_ZEHRA_EMRI",
+      "similarity": 0.07,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.07,
+      "extra": {}
+    },
+    {
+      "first_submission": "AYSE_ALKAN",
+      "second_submission": "EGE_HURIEL",
+      "similarity": 0.08,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.08,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALP_DIKMEN",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.06,
+      "similarity2": 0.09,
+      "extra": {}
+    },
+    {
+      "first_submission": "ALGUHAN_KURULAR",
+      "second_submission": "YUSUF_ISA_ZERENUZ",
+      "similarity": 0.09,
+      "metric": "MOSS",
+      "similarity1": 0.07,
+      "similarity2": 0.09,
+      "extra": {}
+    }
+  ],
+  "metadata": {
+    "tool": "moss",
+    "language": "cc",
+    "report_url": "http://moss.stanford.edu/results/7/1399719699724",
+    "files_submitted": 29
+  }
+}
