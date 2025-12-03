@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plagiarism Detection Report</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0; padding: 20px; background: #1a1a2e; color: #eee;
+        }
+        h1 { color: #00d4ff; border-bottom: 2px solid #00d4ff; padding-bottom: 10px; }
+        h2 { color: #ff6b6b; margin-top: 30px; }
+        .summary {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px; margin: 20px 0;
+        }
+        .stat-card {
+            background: #16213e; padding: 20px; border-radius: 10px;
+            border-left: 4px solid #00d4ff;
+        }
+        .stat-card.critical { border-left-color: #ff4757; }
+        .stat-card.high { border-left-color: #ffa502; }
+        .stat-value { font-size: 2em; font-weight: bold; }
+        .stat-label { color: #888; font-size: 0.9em; }
+        table {
+            width: 100%; border-collapse: collapse; margin: 20px 0;
+            background: #16213e; border-radius: 10px; overflow: hidden;
+        }
+        th { background: #0f3460; color: #00d4ff; padding: 12px; text-align: left; }
+        td { padding: 10px 12px; border-bottom: 1px solid #0f3460; }
+        tr:hover { background: #1f4068; }
+        .critical { color: #ff4757; font-weight: bold; }
+        .high { color: #ffa502; font-weight: bold; }
+        .medium { color: #ffd43b; }
+        .low { color: #2ed573; }
+        .badge {
+            display: inline-block; padding: 3px 8px; border-radius: 4px;
+            font-size: 0.8em; font-weight: bold;
+        }
+        .badge.critical { background: #ff4757; color: white; }
+        .badge.high { background: #ffa502; color: black; }
+        .badge.medium { background: #ffd43b; color: black; }
+        .legend {
+            margin: 20px 0; padding: 15px; background: #16213e;
+            border-radius: 10px; display: flex; gap: 20px; flex-wrap: wrap;
+        }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .legend-dot.critical { background: #ff4757; }
+        .legend-dot.high { background: #ffa502; }
+        .legend-dot.medium { background: #ffd43b; }
+        .chart-container {
+            background: #16213e; border-radius: 10px; padding: 15px; margin: 20px 0;
+        }
+        .chart-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;
+        }
+        @media (max-width: 1200px) {
+            .chart-row { grid-template-columns: 1fr; }
+        }
+        .tab-container {
+            margin: 20px 0;
+        }
+        .tab-buttons {
+            display: flex; gap: 10px; margin-bottom: 15px;
+        }
+        .tab-button {
+            padding: 10px 20px; background: #16213e; border: none;
+            color: #888; cursor: pointer; border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .tab-button:hover { background: #1f4068; color: #eee; }
+        .tab-button.active { background: #0f3460; color: #00d4ff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .suggestion-card {
+            background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+            border: 1px solid #0f3460; border-radius: 12px;
+            padding: 20px; margin: 25px 0;
+        }
+        .suggestion-card h3 {
+            color: #00d4ff; margin: 0 0 5px 0; font-size: 1.2em;
+        }
+        .suggestion-subtitle {
+            color: #888; font-size: 0.85em; margin: 0 0 15px 0;
+        }
+        .suggestions-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
+        }
+        .suggestion-item {
+            background: #0f3460; border-radius: 8px; padding: 15px; text-align: center;
+        }
+        .suggestion-item.critical { border-top: 3px solid #ff4757; }
+        .suggestion-item.high { border-top: 3px solid #ffa502; }
+        .suggestion-item.medium { border-top: 3px solid #ffd43b; }
+        .suggestion-label {
+            font-size: 0.8em; color: #888; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .suggestion-value {
+            font-size: 1.8em; font-weight: bold; margin: 5px 0;
+        }
+        .suggestion-item.critical .suggestion-value { color: #ff4757; }
+        .suggestion-item.high .suggestion-value { color: #ffa502; }
+        .suggestion-item.medium .suggestion-value { color: #ffd43b; }
+        .suggestion-count {
+            font-size: 0.85em; color: #aaa;
+        }
+        .suggestion-stats {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 15px; padding-top: 15px; border-top: 1px solid #0f3460;
+            font-size: 0.85em; color: #888;
+        }
+        .confidence-badge {
+            padding: 4px 10px; border-radius: 12px; font-size: 0.75em;
+            font-weight: bold; color: #1a1a2e;
+        }
+        @media (max-width: 600px) {
+            .suggestions-grid { grid-template-columns: 1fr; }
+        }
+        /* Detector Info Panel */
+        .detector-info-panel {
+            background: #16213e; border-radius: 10px; padding: 20px; margin: 20px 0;
+        }
+        .detector-info-panel h3 {
+            color: #00d4ff; margin: 0 0 15px 0;
+        }
+        .detector-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;
+        }
+        .detector-card {
+            background: #0f3460; border-radius: 8px; padding: 15px;
+        }
+        .detector-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+        }
+        .technique-badge {
+            padding: 2px 8px; border-radius: 10px; font-size: 0.7em;
+            font-weight: bold; color: #1a1a2e;
+        }
+        .detector-desc {
+            color: #aaa; font-size: 0.85em; margin: 0 0 10px 0;
+        }
+        .detector-details {
+            font-size: 0.8em;
+        }
+        .detector-details .catches {
+            color: #2ed573; display: block; margin-bottom: 4px;
+        }
+        .detector-details .misses {
+            color: #ff6b6b; display: block;
+        }
+        /* Action Definitions Panel */
+        .action-definitions-panel {
+            background: #16213e; border-radius: 10px; padding: 20px; margin: 20px 0;
+        }
+        .action-definitions-panel h3 {
+            color: #00d4ff; margin: 0 0 15px 0;
+        }
+        .action-def-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;
+        }
+        .action-def-card {
+            background: #0f3460; border-radius: 8px; padding: 15px;
+        }
+        .action-def-header {
+            margin-bottom: 10px;
+        }
+        .action-def-badge {
+            padding: 5px 12px; border-radius: 6px; font-size: 0.9em;
+            font-weight: bold; color: #1a1a2e; display: inline-block;
+        }
+        .action-def-when {
+            color: #aaa; font-size: 0.85em; margin: 8px 0;
+        }
+        .action-def-when strong {
+            color: #00d4ff;
+        }
+        .action-def-meaning {
+            color: #ddd; font-size: 0.85em; margin: 0; line-height: 1.4;
+        }
+        /* Table Confidence & Action Badges */
+        .conf-badge {
+            padding: 3px 8px; border-radius: 4px; font-size: 0.75em;
+            font-weight: bold; display: inline-block;
+        }
+        .conf-badge.very_high { background: #2ed573; color: #1a1a2e; }
+        .conf-badge.high { background: #00d4ff; color: #1a1a2e; }
+        .conf-badge.medium { background: #ffa502; color: #1a1a2e; }
+        .conf-badge.low { background: #888; color: #eee; }
+        .action-badge {
+            padding: 4px 10px; border-radius: 4px; font-size: 0.8em;
+            font-weight: bold; display: inline-block; color: #1a1a2e;
+        }
+        .explanation-text {
+            font-size: 0.75em; color: #888; display: block; margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Plagiarism Detection Report</h1>
+
+    <div class="summary">
+        <div class="stat-card">
+            <div class="stat-value">27</div>
+            <div class="stat-label">Total Students</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">16</div>
+            <div class="stat-label">Flagged Pairs (≥50%)</div>
+        </div>
+        <div class="stat-card critical">
+            <div class="stat-value">7</div>
+            <div class="stat-label">Critical Risk Students</div>
+        </div>
+        <div class="stat-card high">
+            <div class="stat-value">10</div>
+            <div class="stat-label">High Risk Students</div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="legend-dot critical"></div> Critical (≥95%) - Very likely plagiarism</div>
+        <div class="legend-item"><div class="legend-dot high"></div> High (≥85%) - Suspicious</div>
+        <div class="legend-item"><div class="legend-dot medium"></div> Medium (≥75%) - Review recommended</div>
+    </div>
+
+    
+    <div class="suggestion-card">
+        <h3>📊 Suggested Thresholds</h3>
+        <p class="suggestion-subtitle">Based on statistical analysis of this dataset</p>
+        <div class="suggestions-grid">
+            <div class="suggestion-item critical">
+                <div class="suggestion-label">Critical</div>
+                <div class="suggestion-value">≥ 95%</div>
+                <div class="suggestion-count">5 students</div>
+            </div>
+            <div class="suggestion-item high">
+                <div class="suggestion-label">High</div>
+                <div class="suggestion-value">≥ 85%</div>
+                <div class="suggestion-count">1 students</div>
+            </div>
+            <div class="suggestion-item medium">
+                <div class="suggestion-label">Medium</div>
+                <div class="suggestion-value">≥ 75%</div>
+                <div class="suggestion-count">3 students</div>
+            </div>
+        </div>
+        <div class="suggestion-stats">
+            <span>📈 27 students | Median: 45.2% | MAD: 17.2</span>
+            <span class="confidence-badge" style="background: #ff4757;">
+                Confidence: LOW
+            </span>
+        </div>
+    </div>
+
+
+    
+    <div class="detector-info-panel">
+        <h3>🔍 Detection Techniques Used</h3>
+        <div class="detector-grid">
+            <div class="detector-card">
+                <div class="detector-header">
+                    <strong>JPlag</strong>
+                    <span class="technique-badge" style="background: #00d4ff;">TOKEN</span>
+                </div>
+                <p class="detector-desc">Token-based comparison</p>
+                <div class="detector-details">
+                    <span class="catches">✓ Variable renaming, statement reordering</span>
+                    <span class="misses">✗ Structural refactoring, AST changes</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <div class="action-definitions-panel">
+        <h3>📋 Action Definitions</h3>
+        <div class="action-def-grid">
+            <div class="action-def-card">
+                <div class="action-def-header">
+                    <span class="action-def-badge" style="background: #ff4757;">🔴 INVESTIGATE</span>
+                </div>
+                <p class="action-def-when"><strong>When:</strong> High confidence + Critical score (≥89%)</p>
+                <p class="action-def-meaning">Strong evidence of plagiarism. Multiple detectors using different techniques report very high similarity. Requires immediate investigation - compare the code directly.</p>
+            </div>
+            <div class="action-def-card">
+                <div class="action-def-header">
+                    <span class="action-def-badge" style="background: #ffa502;">🟠 REVIEW</span>
+                </div>
+                <p class="action-def-when"><strong>When:</strong> High confidence + High score (≥77%)</p>
+                <p class="action-def-meaning">Likely plagiarism. Multiple techniques agree on high similarity. Detailed manual review needed - examine actual code structure and logic.</p>
+            </div>
+            <div class="action-def-card">
+                <div class="action-def-header">
+                    <span class="action-def-badge" style="background: #ffd43b;">🟡 CHECK</span>
+                </div>
+                <p class="action-def-when"><strong>When:</strong> High confidence + Medium score, or Medium confidence + High score</p>
+                <p class="action-def-meaning">Possible plagiarism. Detectors agree but scores aren't extreme. Quick manual verification recommended.</p>
+            </div>
+            <div class="action-def-card">
+                <div class="action-def-header">
+                    <span class="action-def-badge" style="background: #888888;">⚪ VERIFY</span>
+                </div>
+                <p class="action-def-when"><strong>When:</strong> Low confidence (single detector)</p>
+                <p class="action-def-meaning">Uncertain - could be false positive. Only one detector flagged this pair. Similarity might be coincidental (common algorithms, starter code). Verify before acting.</p>
+            </div>
+            <div class="action-def-card">
+                <div class="action-def-header">
+                    <span class="action-def-badge" style="background: #2ed573;">🟢 MONITOR</span>
+                </div>
+                <p class="action-def-when"><strong>When:</strong> Score below all thresholds</p>
+                <p class="action-def-meaning">Low risk. Even if detectors agree, similarity is below concerning levels. No immediate action needed.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Visualizations Section -->
+    <h2>Visual Analysis</h2>
+    <div class="tab-container">
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="showTab('heatmap')">Heatmap</button>
+            <button class="tab-button" onclick="showTab('network')">Network</button>
+            <button class="tab-button" onclick="showTab('barchart')">Risk Scores</button>
+            <button class="tab-button" onclick="showTab('histogram')">Distribution</button>
+        </div>
+        <div id="heatmap" class="tab-content active chart-container">
+            <div>                            <div id="fb81999b-e2c1-4678-a2c8-69584be4b9e6" class="plotly-graph-div" style="height:675px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("fb81999b-e2c1-4678-a2c8-69584be4b9e6")) {                    Plotly.newPlot(                        "fb81999b-e2c1-4678-a2c8-69584be4b9e6",                        [{"colorbar":{"tickfont":{"color":"#eee"},"ticksuffix":"%","title":{"font":{"color":"#eee"},"text":"Similarity %"}},"colorscale":[[0.0,"#1a1a2e"],[0.375,"#16213e"],[0.75,"#ffd43b"],[0.85,"#ffa502"],[0.95,"#ff4757"],[1.0,"#ff0000"]],"hoverongaps":false,"hovertemplate":"%{y} \u2194 %{x}\u003cbr\u003eSimilarity: %{z:.1f}%\u003cextra\u003e\u003c\u002fextra\u003e","x":["ALI_OZUER","KENAN_OZCAKIR","ALISA_IDA_DELEON","EFE_KASAPOGLU","UMUT_ERTUGRUL_DASGIN","GPT","AGAH_DEMIR_GOK","PELIN_GORER","MUHAMMED_ENES_CAM","TARIK_SERTVURAN","CLAUDE","KARDELEN_KARTAL","IREM_IRMAK_UNLUER","ZEYNEP_ECE_BIKEZ","YUSUF_KULLUK","ATAKAN_NAKTURK","EFE_BORAN_BERBER","SELEN_YULAF","CEM_KAYARDI","SAFA_GOKALP_UGUR","EREN_ADA_DOGAN","BAHAR_CETIN_ASLAN","ELIF_KAYAR","HASAN_KHALILOV","MERT_ACAR","HATICE_AYGAN","CAGATAY_YUREKLI"],"y":["ALI_OZUER","KENAN_OZCAKIR","ALISA_IDA_DELEON","EFE_KASAPOGLU","UMUT_ERTUGRUL_DASGIN","GPT","AGAH_DEMIR_GOK","PELIN_GORER","MUHAMMED_ENES_CAM","TARIK_SERTVURAN","CLAUDE","KARDELEN_KARTAL","IREM_IRMAK_UNLUER","ZEYNEP_ECE_BIKEZ","YUSUF_KULLUK","ATAKAN_NAKTURK","EFE_BORAN_BERBER","SELEN_YULAF","CEM_KAYARDI","SAFA_GOKALP_UGUR","EREN_ADA_DOGAN","BAHAR_CETIN_ASLAN","ELIF_KAYAR","HASAN_KHALILOV","MERT_ACAR","HATICE_AYGAN","CAGATAY_YUREKLI"],"z":[[0.0,100.0,100.0,0.0,0.0,0.0,0.0,0.0,16.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,29.27,17.2,0.0,0.0,22.58,0.0,28.0,0.0,5.63,0.0,0.0],[100.0,0.0,100.0,0.0,0.0,0.0,0.0,0.0,16.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,29.27,17.2,0.0,0.0,22.58,0.0,28.0,0.0,5.63,0.0,0.0],[100.0,100.0,0.0,0.0,0.0,0.0,0.0,0.0,16.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,29.27,17.2,0.0,0.0,22.58,0.0,28.0,0.0,5.63,0.0,0.0],[0.0,0.0,0.0,0.0,100.0,89.02,67.79,34.07,62.5,44.29,25.58,54.55,42.37,31.82,20.0,31.79,23.64,29.63,29.41,24.07,19.85,13.19,0.0,14.08,18.7,11.01,0.0],[0.0,0.0,0.0,100.0,0.0,69.66,82.47,76.43,38.93,62.07,58.19,43.93,50.41,27.74,19.35,23.0,22.61,31.14,34.04,12.39,19.12,12.5,0.0,16.33,17.88,12.28,0.0],[0.0,0.0,0.0,89.02,69.66,0.0,32.93,76.0,36.48,28.39,33.16,39.29,37.59,20.41,19.39,20.95,20.8,24.86,30.46,11.38,17.81,11.32,0.0,8.92,16.85,0.0,0.0],[0.0,0.0,0.0,67.79,82.47,32.93,0.0,12.7,16.3,9.16,24.54,33.0,11.01,26.02,0.0,21.51,11.88,9.15,18.9,24.24,11.48,14.63,0.0,21.05,15.7,0.0,0.0],[0.0,0.0,0.0,34.07,76.43,76.0,12.7,0.0,79.34,27.35,8.05,26.88,37.89,18.35,26.77,8.14,27.59,25.9,10.62,14.12,16.67,17.65,0.0,13.45,8.48,0.0,0.0],[16.0,16.0,16.0,62.5,38.93,36.48,16.3,79.34,0.0,49.21,12.66,35.9,32.69,13.56,13.24,6.63,41.67,35.14,19.67,14.89,32.48,15.58,0.0,10.94,16.52,12.63,0.0],[0.0,0.0,0.0,44.29,62.07,28.39,9.16,27.35,49.21,0.0,18.18,31.41,26.0,22.81,24.24,16.95,32.61,36.11,33.9,31.11,10.62,16.44,23.76,24.19,9.55,13.19,0.0],[0.0,0.0,0.0,25.58,58.19,33.16,24.54,8.05,12.66,18.18,0.0,21.52,10.61,34.25,12.2,42.11,22.58,11.36,13.33,11.48,0.0,11.43,0.0,7.69,9.26,21.14,0.0],[0.0,0.0,0.0,54.55,43.93,39.29,33.0,26.88,35.9,31.41,21.52,0.0,21.3,24.04,12.94,26.83,14.91,16.9,22.46,15.09,21.98,8.45,0.0,17.62,21.78,0.0,0.0],[0.0,0.0,0.0,42.37,50.41,37.59,11.01,37.89,32.69,26.0,10.61,21.3,0.0,28.26,10.91,0.0,28.57,21.31,14.58,29.41,21.98,23.53,0.0,0.0,11.5,0.0,0.0],[0.0,0.0,0.0,31.82,27.74,20.41,26.02,18.35,13.56,22.81,34.25,24.04,28.26,0.0,45.16,26.04,14.29,19.12,10.91,14.63,0.0,18.46,0.0,10.34,12.84,0.0,0.0],[0.0,0.0,0.0,20.0,19.35,19.39,0.0,26.77,13.24,24.24,12.2,12.94,10.91,45.16,0.0,24.6,11.76,36.36,0.0,0.0,14.63,0.0,10.81,20.9,11.01,0.0,0.0],[0.0,0.0,0.0,31.79,23.0,20.95,21.51,8.14,6.63,16.95,42.11,26.83,0.0,26.04,24.6,0.0,0.0,7.04,8.09,0.0,0.0,0.0,0.0,0.0,7.69,0.0,0.0],[29.27,29.27,29.27,23.64,22.61,20.8,11.88,27.59,41.67,32.61,22.58,14.91,28.57,14.29,11.76,0.0,0.0,12.28,29.55,33.33,0.0,27.91,22.54,12.77,13.11,19.67,0.0],[17.2,17.2,17.2,29.63,31.14,24.86,9.15,25.9,35.14,36.11,11.36,16.9,21.31,19.12,36.36,7.04,12.28,0.0,20.0,12.5,10.37,12.63,11.38,8.22,21.29,14.16,0.0],[0.0,0.0,0.0,29.41,34.04,30.46,18.9,10.62,19.67,33.9,13.33,22.46,14.58,10.91,0.0,8.09,29.55,20.0,0.0,30.23,0.0,17.39,20.62,10.0,14.5,20.69,0.0],[0.0,0.0,0.0,24.07,12.39,11.38,24.24,14.12,14.89,31.11,11.48,15.09,29.41,14.63,0.0,0.0,33.33,12.5,30.23,0.0,0.0,29.27,0.0,0.0,12.54,0.0,0.0],[22.58,22.58,22.58,19.85,19.12,17.81,11.48,16.67,32.48,10.62,0.0,21.98,21.98,0.0,14.63,0.0,0.0,10.37,0.0,0.0,0.0,0.0,17.39,13.91,10.43,0.0,0.0],[0.0,0.0,0.0,13.19,12.5,11.32,14.63,17.65,15.58,16.44,11.43,8.45,23.53,18.46,0.0,0.0,27.91,12.63,17.39,29.27,0.0,0.0,0.0,0.0,4.9,0.0,0.0],[28.0,28.0,28.0,0.0,0.0,0.0,0.0,0.0,0.0,23.76,0.0,0.0,0.0,0.0,10.81,0.0,22.54,11.38,20.62,0.0,17.39,0.0,0.0,11.65,8.28,0.0,0.0],[0.0,0.0,0.0,14.08,16.33,8.92,21.05,13.45,10.94,24.19,7.69,17.62,0.0,10.34,20.9,0.0,12.77,8.22,10.0,0.0,13.91,0.0,11.65,0.0,10.68,0.0,0.0],[5.63,5.63,5.63,18.7,17.88,16.85,15.7,8.48,16.52,9.55,9.26,21.78,11.5,12.84,11.01,7.69,13.11,21.29,14.5,12.54,10.43,4.9,8.28,10.68,0.0,3.95,0.0],[0.0,0.0,0.0,11.01,12.28,0.0,0.0,0.0,12.63,13.19,21.14,0.0,0.0,0.0,0.0,0.0,19.67,14.16,20.69,0.0,0.0,0.0,0.0,0.0,3.95,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]],"zmax":100,"zmin":0,"type":"heatmap"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"title":{"font":{"color":"#00d4ff"},"text":"Student Similarity Heatmap"},"font":{"color":"#eee"},"xaxis":{"tickangle":45,"side":"bottom","gridcolor":"#0f3460"},"yaxis":{"autorange":"reversed","gridcolor":"#0f3460"},"margin":{"l":150,"r":50,"t":50,"b":150},"paper_bgcolor":"#1a1a2e","plot_bgcolor":"#1a1a2e","height":675},                        {"responsive": true}                    )                };            </script>        </div>
+        </div>
+        <div id="network" class="tab-content chart-container">
+            <div>                            <div id="951e9153-3e6d-4b05-8336-2749d6b264d2" class="plotly-graph-div" style="height:600px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("951e9153-3e6d-4b05-8336-2749d6b264d2")) {                    Plotly.newPlot(                        "951e9153-3e6d-4b05-8336-2749d6b264d2",                        [{"hoverinfo":"none","line":{"color":"#ff4757","width":3},"mode":"lines","showlegend":false,"x":[-0.5266820132292219,-0.34030740968957585,null],"y":[1.0,0.9161988497875873,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ff4757","width":3},"mode":"lines","showlegend":false,"x":[-0.5266820132292219,-0.4481612590372113,null],"y":[1.0,0.7620598652756376,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ff4757","width":3},"mode":"lines","showlegend":false,"x":[-0.34030740968957585,-0.4481612590372113,null],"y":[0.9161988497875873,0.7620598652756376,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ff4757","width":3},"mode":"lines","showlegend":false,"x":[-0.0618817009970596,0.2800118298020519,null],"y":[-0.23505375380604118,-0.27720621827205083,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffa502","width":2},"mode":"lines","showlegend":false,"x":[-0.0618817009970596,0.05912188837796048,null],"y":[-0.23505375380604118,-0.1536743835012857,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[-0.0618817009970596,0.22351992681717625,null],"y":[-0.23505375380604118,-0.0744747249953429,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[-0.0618817009970596,-0.31620671845357273,null],"y":[-0.23505375380604118,-0.27412025925258304,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[-0.0618817009970596,-0.4540343742778542,null],"y":[-0.23505375380604118,-0.4557131405951538,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[0.2800118298020519,0.22351992681717625,null],"y":[-0.27720621827205083,-0.0744747249953429,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[0.2800118298020519,-0.06124346399046665,null],"y":[-0.27720621827205083,-0.34896188726046423,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[0.2800118298020519,0.05912188837796048,null],"y":[-0.27720621827205083,-0.1536743835012857,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[0.2800118298020519,0.46394531054706395,null],"y":[-0.27720621827205083,-0.6244169575471434,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[0.2800118298020519,0.6763998197930113,null],"y":[-0.27720621827205083,-0.3662189293694017,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[0.2800118298020519,0.5055181643376991,null],"y":[-0.27720621827205083,0.13158153953624124,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[0.05912188837796048,-0.06124346399046665,null],"y":[-0.1536743835012857,-0.34896188726046423,null],"type":"scatter"},{"hoverinfo":"none","line":{"color":"#ffd43b","width":1},"mode":"lines","showlegend":false,"x":[-0.06124346399046665,-0.31620671845357273,null],"y":[-0.34896188726046423,-0.27412025925258304,null],"type":"scatter"},{"hovertemplate":"%{text}\u003cbr\u003eMax similarity: %{marker.color:.1f}%\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"cmax":100,"cmin":50.0,"color":[100.0,100.0,100.0,100.0,100.0,89.02,82.47,79.34,79.34,62.07,58.19,54.55,50.41],"colorbar":{"tickfont":{"color":"#eee"},"ticksuffix":"%","title":{"font":{"color":"#eee"},"text":"Max Sim %"}},"colorscale":[[0.0,"#2ed573"],[0.5,"#ffd43b"],[0.6,"#ffa502"],[0.8,"#ff4757"],[1.0,"#ff0000"]],"line":{"color":"#0f3460","width":2},"size":[20,20,20,40,56,24,20,24,20,20,20,20,20]},"mode":"markers+text","text":["ALI_OZUER","KENAN_OZCAKIR","ALISA_IDA_DELEON","EFE_KASAPOGLU","UMUT_ERTUGRUL_DASGIN","GPT","AGAH_DEMIR_GOK","PELIN_GORER","MUHAMMED_ENES_CAM","TARIK_SERTVURAN","CLAUDE","KARDELEN_KARTAL","IREM_IRMAK_UNLUER"],"textfont":{"color":"#eee","size":10},"textposition":"top center","x":[-0.5266820132292219,-0.34030740968957585,-0.4481612590372113,-0.0618817009970596,0.2800118298020519,0.05912188837796048,0.22351992681717625,-0.06124346399046665,-0.31620671845357273,0.46394531054706395,0.6763998197930113,-0.4540343742778542,0.5055181643376991],"y":[1.0,0.9161988497875873,0.7620598652756376,-0.23505375380604118,-0.27720621827205083,-0.1536743835012857,-0.0744747249953429,-0.34896188726046423,-0.27412025925258304,-0.6244169575471434,-0.3662189293694017,-0.4557131405951538,0.13158153953624124],"type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"title":{"font":{"color":"#00d4ff"},"text":"Similarity Network (\u226550%)"},"font":{"color":"#eee"},"xaxis":{"showgrid":false,"zeroline":false,"showticklabels":false},"yaxis":{"showgrid":false,"zeroline":false,"showticklabels":false},"margin":{"l":20,"r":20,"t":50,"b":20},"showlegend":false,"paper_bgcolor":"#1a1a2e","plot_bgcolor":"#1a1a2e","height":600},                        {"responsive": true}                    )                };            </script>        </div>
+        </div>
+        <div id="barchart" class="tab-content chart-container">
+            <div>                            <div id="54fc2cf1-07a5-48c5-b2a9-c09e17cc43a0" class="plotly-graph-div" style="height:400px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("54fc2cf1-07a5-48c5-b2a9-c09e17cc43a0")) {                    Plotly.newPlot(                        "54fc2cf1-07a5-48c5-b2a9-c09e17cc43a0",                        [{"hovertemplate":"%{x}\u003cbr\u003eMax: %{y:.1f}%\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":["#ff4757","#ff4757","#ff4757","#ff4757","#ff4757","#ffa502","#ffd43b","#ffd43b","#ffd43b","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573","#2ed573"]},"name":"Max Similarity","x":["ALI_OZUER","KENAN_OZCAKIR","ALISA_IDA_DELEON","EFE_KASAPOGLU","UMUT_ERTUGRUL_DASGIN","GPT","AGAH_DEMIR_GOK","PELIN_GORER","MUHAMMED_ENES_CAM","TARIK_SERTVURAN","CLAUDE","KARDELEN_KARTAL","IREM_IRMAK_UNLUER","ZEYNEP_ECE_BIKEZ","YUSUF_KULLUK","ATAKAN_NAKTURK","EFE_BORAN_BERBER","SELEN_YULAF","CEM_KAYARDI","SAFA_GOKALP_UGUR","EREN_ADA_DOGAN","BAHAR_CETIN_ASLAN","ELIF_KAYAR","HASAN_KHALILOV","MERT_ACAR","HATICE_AYGAN","CAGATAY_YUREKLI"],"y":[100.0,100.0,100.0,100.0,100.0,89.02,82.47,79.34,79.34,62.07,58.19,54.55,50.41,45.16,45.16,42.11,41.67,36.36,34.04,33.33,32.48,29.27,28.0,24.19,21.78,21.14,0.0],"type":"bar"},{"hovertemplate":"%{x}\u003cbr\u003eAvg: %{y:.1f}%\u003cextra\u003e\u003c\u002fextra\u003e","line":{"color":"#00d4ff","width":2},"marker":{"size":6},"mode":"lines+markers","name":"Avg Similarity","x":["ALI_OZUER","KENAN_OZCAKIR","ALISA_IDA_DELEON","EFE_KASAPOGLU","UMUT_ERTUGRUL_DASGIN","GPT","AGAH_DEMIR_GOK","PELIN_GORER","MUHAMMED_ENES_CAM","TARIK_SERTVURAN","CLAUDE","KARDELEN_KARTAL","IREM_IRMAK_UNLUER","ZEYNEP_ECE_BIKEZ","YUSUF_KULLUK","ATAKAN_NAKTURK","EFE_BORAN_BERBER","SELEN_YULAF","CEM_KAYARDI","SAFA_GOKALP_UGUR","EREN_ADA_DOGAN","BAHAR_CETIN_ASLAN","ELIF_KAYAR","HASAN_KHALILOV","MERT_ACAR","HATICE_AYGAN","CAGATAY_YUREKLI"],"y":[12.256923076923076,12.256923076923076,12.256923076923076,30.283076923076923,31.941153846153846,24.83346153846154,17.863846153846154,21.786538461538463,24.806153846153848,22.75153846153846,15.743076923076924,19.645384615384614,17.689230769230768,16.117307692307694,12.856538461538461,10.437307692307693,20.456923076923076,18.401923076923076,15.74423076923077,12.333846153846155,11.786923076923076,9.818461538461538,8.093461538461538,8.951538461538462,11.320384615384615,4.950769230769231,0.0],"type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"shapes":[{"line":{"color":"#ff4757","dash":"dash"},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":95.0,"y1":95.0,"yref":"y"},{"line":{"color":"#ffa502","dash":"dash"},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":85.0,"y1":85.0,"yref":"y"}],"annotations":[{"showarrow":false,"text":"Critical (95%)","x":1,"xanchor":"left","xref":"x domain","y":95.0,"yanchor":"middle","yref":"y"},{"showarrow":false,"text":"High (85%)","x":1,"xanchor":"left","xref":"x domain","y":85.0,"yanchor":"middle","yref":"y"}],"title":{"font":{"color":"#00d4ff"},"text":"Student Risk Scores"},"font":{"color":"#eee"},"xaxis":{"tickangle":45,"gridcolor":"#0f3460","title":{"text":"Student"}},"yaxis":{"gridcolor":"#0f3460","title":{"text":"Similarity %"},"range":[0,105]},"legend":{"bgcolor":"#16213e","bordercolor":"#0f3460"},"margin":{"l":50,"r":100,"t":50,"b":150},"paper_bgcolor":"#1a1a2e","plot_bgcolor":"#16213e","height":400},                        {"responsive": true}                    )                };            </script>        </div>
+        </div>
+        <div id="histogram" class="tab-content chart-container">
+            <div>                            <div id="756d325a-a5d4-4bcc-9916-650ffdee5a90" class="plotly-graph-div" style="height:350px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("756d325a-a5d4-4bcc-9916-650ffdee5a90")) {                    Plotly.newPlot(                        "756d325a-a5d4-4bcc-9916-650ffdee5a90",                        [{"hovertemplate":"Range: %{x:.0f}%\u003cbr\u003eStudents: %{y}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#00d4ff","line":{"color":"#0f3460","width":1}},"nbinsx":10,"x":[100.0,100.0,100.0,100.0,100.0,89.02,82.47,79.34,79.34,62.07,58.19,54.55,50.41,45.16,45.16,42.11,41.67,36.36,34.04,33.33,32.48,29.27,28.0,24.19,21.78,21.14,0.0],"type":"histogram"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"shapes":[{"fillcolor":"#ff4757","opacity":0.2,"type":"rect","x0":95.0,"x1":100,"xref":"x","y0":0,"y1":1,"yref":"y domain"},{"fillcolor":"#ffa502","opacity":0.2,"type":"rect","x0":85.0,"x1":95.0,"xref":"x","y0":0,"y1":1,"yref":"y domain"},{"fillcolor":"#ffd43b","opacity":0.2,"type":"rect","x0":75.0,"x1":85.0,"xref":"x","y0":0,"y1":1,"yref":"y domain"}],"annotations":[{"showarrow":false,"text":"Critical (\u226595%)","x":97.5,"xanchor":"center","xref":"x","y":1,"yanchor":"top","yref":"y domain"},{"showarrow":false,"text":"High (\u226585%)","x":90.0,"xanchor":"center","xref":"x","y":1,"yanchor":"top","yref":"y domain"},{"showarrow":false,"text":"Medium (\u226575%)","x":80.0,"xanchor":"center","xref":"x","y":1,"yanchor":"top","yref":"y domain"}],"title":{"font":{"color":"#00d4ff"},"text":"Student Risk Score Distribution"},"font":{"color":"#eee"},"xaxis":{"title":{"text":"Max Similarity %"},"gridcolor":"#0f3460","range":[0,100]},"yaxis":{"title":{"text":"Number of Students"},"gridcolor":"#0f3460"},"margin":{"l":50,"r":50,"t":50,"b":50},"paper_bgcolor":"#1a1a2e","plot_bgcolor":"#16213e","height":350,"bargap":0.1},                        {"responsive": true}                    )                };            </script>        </div>
+        </div>
+    </div>
+
+    <script>
+    function showTab(tabId) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        // Show selected tab
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+        // Trigger Plotly resize for proper rendering
+        if (window.Plotly) {
+            Plotly.Plots.resize(document.getElementById(tabId).querySelector('.plotly-graph-div'));
+        }
+    }
+    </script>
+
+    <h2>Student Risk Summary</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Max Score</th>
+                <th>Highest Match With</th>
+                <th>Avg Score</th>
+                <th>Critical Flags</th>
+                <th>High Flags</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ALI_OZUER</td>
+                <td class="critical">100.0%</td>
+                <td>KENAN_OZCAKIR</td>
+                <td>12.3%</td>
+                <td>1</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>KENAN_OZCAKIR</td>
+                <td class="critical">100.0%</td>
+                <td>ALI_OZUER</td>
+                <td>12.3%</td>
+                <td>1</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>ALISA_IDA_DELEON</td>
+                <td class="critical">100.0%</td>
+                <td>KENAN_OZCAKIR</td>
+                <td>12.3%</td>
+                <td>1</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>EFE_KASAPOGLU</td>
+                <td class="critical">100.0%</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>30.3%</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td class="critical">100.0%</td>
+                <td>EFE_KASAPOGLU</td>
+                <td>31.9%</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>GPT</td>
+                <td class="critical">89.0%</td>
+                <td>EFE_KASAPOGLU</td>
+                <td>24.8%</td>
+                <td>-</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>AGAH_DEMIR_GOK</td>
+                <td class="critical">82.5%</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>17.9%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>PELIN_GORER</td>
+                <td class="high">79.3%</td>
+                <td>MUHAMMED_ENES_CAM</td>
+                <td>21.8%</td>
+                <td>-</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>MUHAMMED_ENES_CAM</td>
+                <td class="high">79.3%</td>
+                <td>PELIN_GORER</td>
+                <td>24.8%</td>
+                <td>-</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>TARIK_SERTVURAN</td>
+                <td class="high">62.1%</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>22.8%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>CLAUDE</td>
+                <td class="medium">58.2%</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>15.7%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>KARDELEN_KARTAL</td>
+                <td class="medium">54.5%</td>
+                <td>EFE_KASAPOGLU</td>
+                <td>19.6%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>IREM_IRMAK_UNLUER</td>
+                <td class="medium">50.4%</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>17.7%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>ZEYNEP_ECE_BIKEZ</td>
+                <td class="medium">45.2%</td>
+                <td>YUSUF_KULLUK</td>
+                <td>16.1%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>YUSUF_KULLUK</td>
+                <td class="medium">45.2%</td>
+                <td>ZEYNEP_ECE_BIKEZ</td>
+                <td>12.9%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>ATAKAN_NAKTURK</td>
+                <td class="medium">42.1%</td>
+                <td>CLAUDE</td>
+                <td>10.4%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>EFE_BORAN_BERBER</td>
+                <td class="medium">41.7%</td>
+                <td>MUHAMMED_ENES_CAM</td>
+                <td>20.5%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>SELEN_YULAF</td>
+                <td class="low">36.4%</td>
+                <td>YUSUF_KULLUK</td>
+                <td>18.4%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>CEM_KAYARDI</td>
+                <td class="low">34.0%</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>15.7%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>SAFA_GOKALP_UGUR</td>
+                <td class="low">33.3%</td>
+                <td>EFE_BORAN_BERBER</td>
+                <td>12.3%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>EREN_ADA_DOGAN</td>
+                <td class="low">32.5%</td>
+                <td>MUHAMMED_ENES_CAM</td>
+                <td>11.8%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>BAHAR_CETIN_ASLAN</td>
+                <td class="low">29.3%</td>
+                <td>SAFA_GOKALP_UGUR</td>
+                <td>9.8%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>ELIF_KAYAR</td>
+                <td class="low">28.0%</td>
+                <td>KENAN_OZCAKIR</td>
+                <td>8.1%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>HASAN_KHALILOV</td>
+                <td class="low">24.2%</td>
+                <td>TARIK_SERTVURAN</td>
+                <td>9.0%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>MERT_ACAR</td>
+                <td class="low">21.8%</td>
+                <td>KARDELEN_KARTAL</td>
+                <td>11.3%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>HATICE_AYGAN</td>
+                <td class="low">21.1%</td>
+                <td>CLAUDE</td>
+                <td>5.0%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>CAGATAY_YUREKLI</td>
+                <td class="low">0.0%</td>
+                <td></td>
+                <td>0.0%</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Flagged Pairs</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Student 1</th>
+                <th>Student 2</th>
+                <th>jplag</th>
+                <th>Average</th>
+                <th>Confidence</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>ALI_OZUER</td>
+                <td>KENAN_OZCAKIR</td>
+                <td>100.0%</td>
+                <td class="critical">100.0%</td>
+                <td>
+                    <span class="conf-badge low">LOW</span>
+                    <span class="explanation-text">Token match only - similar code surface, verify structure</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #888888;">⚪ VERIFY</span>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>ALISA_IDA_DELEON</td>
+                <td>KENAN_OZCAKIR</td>
+                <td>100.0%</td>
+                <td class="critical">100.0%</td>
+                <td>
+                    <span class="conf-badge low">LOW</span>
+                    <span class="explanation-text">Token match only - similar code surface, verify structure</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #888888;">⚪ VERIFY</span>
+                </td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>ALISA_IDA_DELEON</td>
+                <td>ALI_OZUER</td>
+                <td>100.0%</td>
+                <td class="critical">100.0%</td>
+                <td>
+                    <span class="conf-badge low">LOW</span>
+                    <span class="explanation-text">Token match only - similar code surface, verify structure</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #888888;">⚪ VERIFY</span>
+                </td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>EFE_KASAPOGLU</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>100.0%</td>
+                <td class="critical">100.0%</td>
+                <td>
+                    <span class="conf-badge low">LOW</span>
+                    <span class="explanation-text">Token match only - similar code surface, verify structure</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #888888;">⚪ VERIFY</span>
+                </td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>EFE_KASAPOGLU</td>
+                <td>GPT</td>
+                <td>89.0%</td>
+                <td class="high">89.0%</td>
+                <td>
+                    <span class="conf-badge low">LOW</span>
+                    <span class="explanation-text">Token match only - similar code surface, verify structure</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #888888;">⚪ VERIFY</span>
+                </td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>AGAH_DEMIR_GOK</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>82.5%</td>
+                <td class="medium">82.5%</td>
+                <td>
+                    <span class="conf-badge low">LOW</span>
+                    <span class="explanation-text">Token match only - similar code surface, verify structure</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #888888;">⚪ VERIFY</span>
+                </td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>PELIN_GORER</td>
+                <td>MUHAMMED_ENES_CAM</td>
+                <td>79.3%</td>
+                <td class="medium">79.3%</td>
+                <td>
+                    <span class="conf-badge low">LOW</span>
+                    <span class="explanation-text">Token match only - similar code surface, verify structure</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #888888;">⚪ VERIFY</span>
+                </td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>PELIN_GORER</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>76.4%</td>
+                <td class="medium">76.4%</td>
+                <td>
+                    <span class="conf-badge low">LOW</span>
+                    <span class="explanation-text">Token match only - similar code surface, verify structure</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #888888;">⚪ VERIFY</span>
+                </td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>PELIN_GORER</td>
+                <td>GPT</td>
+                <td>76.0%</td>
+                <td class="medium">76.0%</td>
+                <td>
+                    <span class="conf-badge low">LOW</span>
+                    <span class="explanation-text">Token match only - similar code surface, verify structure</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #888888;">⚪ VERIFY</span>
+                </td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>GPT</td>
+                <td>69.7%</td>
+                <td class="low">69.7%</td>
+                <td>
+                    <span class="conf-badge none">NONE</span>
+                    <span class="explanation-text">No detectors found significant similarity</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #2ed573;">🟢 MONITOR</span>
+                </td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>AGAH_DEMIR_GOK</td>
+                <td>EFE_KASAPOGLU</td>
+                <td>67.8%</td>
+                <td class="low">67.8%</td>
+                <td>
+                    <span class="conf-badge none">NONE</span>
+                    <span class="explanation-text">No detectors found significant similarity</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #2ed573;">🟢 MONITOR</span>
+                </td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>MUHAMMED_ENES_CAM</td>
+                <td>EFE_KASAPOGLU</td>
+                <td>62.5%</td>
+                <td class="low">62.5%</td>
+                <td>
+                    <span class="conf-badge none">NONE</span>
+                    <span class="explanation-text">No detectors found significant similarity</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #2ed573;">🟢 MONITOR</span>
+                </td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>TARIK_SERTVURAN</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>62.1%</td>
+                <td class="low">62.1%</td>
+                <td>
+                    <span class="conf-badge none">NONE</span>
+                    <span class="explanation-text">No detectors found significant similarity</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #2ed573;">🟢 MONITOR</span>
+                </td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>CLAUDE</td>
+                <td>58.2%</td>
+                <td class="low">58.2%</td>
+                <td>
+                    <span class="conf-badge none">NONE</span>
+                    <span class="explanation-text">No detectors found significant similarity</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #2ed573;">🟢 MONITOR</span>
+                </td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>EFE_KASAPOGLU</td>
+                <td>KARDELEN_KARTAL</td>
+                <td>54.5%</td>
+                <td class="low">54.5%</td>
+                <td>
+                    <span class="conf-badge none">NONE</span>
+                    <span class="explanation-text">No detectors found significant similarity</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #2ed573;">🟢 MONITOR</span>
+                </td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>IREM_IRMAK_UNLUER</td>
+                <td>UMUT_ERTUGRUL_DASGIN</td>
+                <td>50.4%</td>
+                <td class="low">50.4%</td>
+                <td>
+                    <span class="conf-badge none">NONE</span>
+                    <span class="explanation-text">No detectors found significant similarity</span>
+                </td>
+                <td>
+                    <span class="action-badge" style="background: #2ed573;">🟢 MONITOR</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
