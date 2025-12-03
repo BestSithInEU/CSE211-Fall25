@@ -5,12 +5,7 @@ from pydantic import BaseModel
 
 from .base import BasePluginFactory, PluginNotFoundError
 from ..plugins.protocols import DetectorProtocol
-from ..plugins.models.detectors import (
-    JPlagConfig,
-    MossConfig,
-    DolosConfig,
-    CopyDetectConfig,
-)
+from ..plugins.models.detectors import JPlagConfig
 
 
 class DetectorFactory(BasePluginFactory[DetectorProtocol]):
@@ -29,9 +24,6 @@ class DetectorFactory(BasePluginFactory[DetectorProtocol]):
     # Map detector names to their expected config types
     CONFIG_TYPE_MAP = {
         'jplag': JPlagConfig,
-        'moss': MossConfig,
-        'dolos': DolosConfig,
-        'copydetect': CopyDetectConfig,
     }
 
     def __init__(self):

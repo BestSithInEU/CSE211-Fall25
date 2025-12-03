@@ -1,5 +1,6 @@
 """Handler for running plagiarism detection."""
 
+import glob
 from pathlib import Path
 from typing import Optional
 
@@ -9,7 +10,7 @@ from ..core.exceptions import PlagDetError
 from ..core.models.config import DetectorConfig
 from ..core.registry import _detector_registry
 from ..ui.console import console
-from ..ui.formatters import print_error, print_info, print_success
+from ..ui.formatters import print_error, print_info, print_success, print_warning
 
 
 class RunHandler:
@@ -69,6 +70,55 @@ class RunHandler:
             if self.verbose:
                 console.print_exception(show_locals=True)
             raise
+
+    def execute_all(
+        self,
+        pattern: str = "config-lab*.yaml",
+        detector_override: Optional[list[str]] = None,
+        all_detectors: bool = False
+    ) -> None:
+        """Execute plagiarism detection for all matching config files.
+
+        Args:
+            pattern: Glob pattern to match config files (default: config-lab*.yaml)
+            detector_override: List of detector names to run (overrides config)
+            all_detectors: Run all available detectors (overrides config)
+
+        Raises:
+            PlagDetError: If detection fails
+            FileNotFoundError: If no config files found
+        """
+        config_files = sorted(glob.glob(pattern))
+
+        if not config_files:
+            raise FileNotFoundError(f"No config files found matching: {pattern}")
+
+        print_info(f"Found {len(config_files)} config file(s): {', '.join(config_files)}")
+
+        failed = []
+        for config_path in config_files:
+            print_info(f"\n{'='*60}")
+            print_info(f"Running: {config_path}")
+            print_info(f"{'='*60}")
+
+            try:
+                self.execute(
+                    config_path=config_path,
+                    detector_override=detector_override,
+                    all_detectors=all_detectors
+                )
+            except Exception as e:
+                print_error(f"Failed: {config_path} - {e}")
+                failed.append(config_path)
+
+        # Summary
+        print_info(f"\n{'='*60}")
+        print_info("SUMMARY")
+        print_info(f"{'='*60}")
+        print_success(f"Completed: {len(config_files) - len(failed)}/{len(config_files)}")
+
+        if failed:
+            print_warning(f"Failed: {', '.join(failed)}")
 
     def _load_config(self, config_path: str | Path) -> AppConfig:
         """Load and validate configuration file.

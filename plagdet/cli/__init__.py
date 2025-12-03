@@ -25,13 +25,12 @@ from .commands import (
     unzip_command,
     cleanup_command,
     find_archives_command,
-    aggregate_command,
     report_command,
 )
 
 # Import plugins to register them (trigger decorators)
 # This is intentional - importing plugins registers them via decorators
-from ..plugins.detectors import copydetect_detector, dolos, jplag, moss
+from ..plugins.detectors import jplag
 from ..plugins.outputs import csv, json
 from ..plugins.processors import encoding_normalizer, normalizer, unzipper
 
@@ -54,7 +53,6 @@ app.command(name="check-config")(check_config_command)
 app.command(name="unzip")(unzip_command)
 app.command(name="cleanup")(cleanup_command)
 app.command(name="find-archives")(find_archives_command)
-app.command(name="aggregate")(aggregate_command)
 app.command(name="report")(report_command)
 
 
@@ -79,11 +77,10 @@ def main(
         help="Show version and exit",
     )
 ):
-    """PlagDet - Multi-detector plagiarism detection tool.
+    """PlagDet - Plagiarism detection tool.
 
-    A modern, plugin-based architecture for running multiple plagiarism
-    detectors (JPlag, MOSS, Dolos, CopyDetect) with unified configuration
-    and result aggregation.
+    A modern, plugin-based architecture for running plagiarism
+    detection (JPlag) with unified configuration.
     """
     pass
 

@@ -38,27 +38,6 @@ class ReportHandler:
             'catches': 'Variable renaming, statement reordering',
             'misses': 'Structural refactoring, AST changes'
         },
-        'dolos': {
-            'technique': 'AST',
-            'name': 'Dolos',
-            'description': 'Abstract Syntax Tree comparison',
-            'catches': 'Structural similarity, logic copying',
-            'misses': 'Surface-level changes only'
-        },
-        'moss': {
-            'technique': 'NGRAM',
-            'name': 'MOSS',
-            'description': 'Fingerprint/k-gram matching',
-            'catches': 'Near-exact copies, common substrings',
-            'misses': 'Significant code restructuring'
-        },
-        'copydetect': {
-            'technique': 'NGRAM',
-            'name': 'CopyDetect',
-            'description': 'N-gram based detection',
-            'catches': 'Character sequences, local similarity',
-            'misses': 'AST-level transformations'
-        }
     }
 
     # Severity thresholds
@@ -77,26 +56,27 @@ class ReportHandler:
         threshold: float = 50.0,
         format: str = "console"
     ) -> None:
-        """Generate plagiarism report from aggregated results.
+        """Generate plagiarism report from JPlag results.
 
         Args:
-            results_path: Path to aggregated.csv or results directory
+            results_path: Path to JPlag CSV file or results directory
             output_path: Optional output file path for HTML
             threshold: Minimum similarity to include in report
             format: Output format ('console' or 'html')
         """
         results_path = Path(results_path)
 
-        # Find aggregated.csv
+        # Find JPlag CSV file
+        csv_path = None
         if results_path.is_dir():
-            csv_path = results_path / "aggregated.csv"
-            if not csv_path.exists():
-                csv_path = results_path / "results" / "aggregated.csv"
+            matches = list(results_path.glob("*_jplag.csv"))
+            if matches:
+                csv_path = matches[0]
         else:
             csv_path = results_path
 
-        if not csv_path.exists():
-            raise FileNotFoundError(f"Aggregated results not found: {csv_path}")
+        if not csv_path or not csv_path.exists():
+            raise FileNotFoundError(f"No JPlag results CSV found in: {results_path}")
 
         # Load data
         pairs, detectors = self._load_results(csv_path)
@@ -113,29 +93,62 @@ class ReportHandler:
         else:
             self._print_console_report(student_stats, flagged, detectors, threshold)
 
+    def generate_all(
+        self,
+        base_path: str | Path = ".",
+        threshold: float = 50.0,
+        format: str = "console"
+    ) -> None:
+        """Generate reports for all results directories.
+
+        Args:
+            base_path: Base directory to search from
+            threshold: Minimum similarity to include in report
+            format: Output format ('console' or 'html')
+        """
+        base_path = Path(base_path)
+
+        # Find all JPlag CSV files in results directories
+        csv_files = list(base_path.glob("**/results/*_jplag.csv"))
+
+        if not csv_files:
+            print_error("No JPlag results found")
+            return
+
+        print_info(f"Found {len(csv_files)} result(s)")
+
+        for csv_path in sorted(csv_files):
+            results_dir = csv_path.parent
+            output_path = results_dir / "plagiarism_report.html" if format == "html" else None
+
+            print_info(f"Processing: {results_dir}")
+            try:
+                self.generate(
+                    results_path=results_dir,
+                    output_path=output_path,
+                    threshold=threshold,
+                    format=format
+                )
+            except Exception as e:
+                print_error(f"Failed to process {results_dir}: {e}")
+
     def _load_results(self, csv_path: Path) -> tuple[list, list]:
-        """Load results from aggregated CSV."""
+        """Load results from JPlag CSV."""
         pairs = []
-        detectors = []
+        detectors = ['jplag']
 
         with open(csv_path, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
 
-            # Get detector columns (exclude metadata columns)
-            skip_cols = {'First Submission', 'Second Submission', 'Average', 'Count'}
-            detectors = [col for col in reader.fieldnames if col not in skip_cols]
-
             for row in reader:
+                similarity = float(row.get('Similarity', 0))
                 pair = {
                     'student1': row['First Submission'],
                     'student2': row['Second Submission'],
-                    'average': float(row['Average']),
-                    'count': int(row['Count']),
-                    'scores': {}
+                    'average': similarity,
+                    'count': 1,
+                    'scores': {'jplag': similarity}
                 }
-                for det in detectors:
-                    val = row.get(det, '-')
-                    pair['scores'][det] = float(val) if val != '-' else None
                 pairs.append(pair)
 
         return pairs, detectors

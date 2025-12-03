@@ -29,6 +29,14 @@ class Comparison(BaseModel):
         default=None, ge=0.0, le=1.0, description="Second submission similarity (MOSS)"
     )
 
+    # Source file tracking (for same-filename aggregation)
+    first_file: Optional[str] = Field(
+        default=None, description="Source filename in first submission"
+    )
+    second_file: Optional[str] = Field(
+        default=None, description="Source filename in second submission"
+    )
+
     # Additional metadata
     extra: Dict[str, Any] = Field(
         default_factory=dict, description="Additional detector-specific data"

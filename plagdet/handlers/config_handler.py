@@ -123,7 +123,6 @@ class ConfigHandler:
         table.add_column("Value", style="yellow")
 
         table.add_row("Target Path", config.settings.target_path)
-        table.add_row("Auto Aggregate", str(config.settings.auto_aggregate))
         table.add_row("Cleanup Temp", str(config.settings.cleanup_temp))
         table.add_row("Verbose", str(config.settings.verbose))
 

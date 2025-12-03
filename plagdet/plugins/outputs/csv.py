@@ -61,9 +61,11 @@ class CSVOutput(OutputPlugin):
             writer.writerow(['First Submission', 'Second Submission', 'Similarity'])
 
             for comparison in filtered_result.comparisons:
-                # Filter by metric if available
+                # Filter by metric only for JPlag-style multi-metric results
+                # Other detectors (MOSS, DOLOS, COPYDETECT) have their own metric names
                 comparison_metric = comparison.metric.upper()
-                if comparison_metric != metric:
+                jplag_metrics = {"AVG", "MAX", "MIN"}
+                if comparison_metric in jplag_metrics and comparison_metric != metric:
                     continue
 
                 # Get similarity as percentage

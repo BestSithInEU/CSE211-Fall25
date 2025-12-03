@@ -10,8 +10,8 @@ from ...ui.formatters import print_error
 
 
 def run_command(
-    config: Path = typer.Option(
-        ...,
+    config: Optional[Path] = typer.Option(
+        None,
         "--config",
         "-c",
         exists=True,
@@ -19,6 +19,12 @@ def run_command(
         dir_okay=False,
         readable=True,
         help="Path to YAML configuration file",
+    ),
+    all_configs: bool = typer.Option(
+        False,
+        "--all",
+        "-a",
+        help="Run all config-lab*.yaml files in the current directory",
     ),
     verbose: bool = typer.Option(
         False,
@@ -44,6 +50,9 @@ def run_command(
         # Use detectors from config
         plagdet run -c config.yaml
 
+        # Run ALL config-lab*.yaml files
+        plagdet run --all
+
         # Override: run only JPlag
         plagdet run -c config.yaml -d jplag
 
@@ -55,11 +64,21 @@ def run_command(
     """
     try:
         handler = RunHandler(verbose=verbose)
-        handler.execute(
-            config_path=config,
-            detector_override=detectors,
-            all_detectors=all_detectors
-        )
+
+        if all_configs:
+            handler.execute_all(
+                detector_override=detectors,
+                all_detectors=all_detectors
+            )
+        else:
+            if not config:
+                print_error("Either --config or --all is required")
+                raise typer.Exit(code=1)
+            handler.execute(
+                config_path=config,
+                detector_override=detectors,
+                all_detectors=all_detectors
+            )
 
     except Exception as e:
         print_error(f"Command failed: {e}")

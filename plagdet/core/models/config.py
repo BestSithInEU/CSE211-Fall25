@@ -80,10 +80,6 @@ class SettingsConfig(BaseModel):
         default=None,
         description="Multiple directories to analyze (use target_path OR target_paths)"
     )
-    auto_aggregate: bool = Field(
-        default=True,
-        description="Automatically aggregate results when multiple detectors run",
-    )
     cleanup_temp: bool = Field(
         default=False, description="Clean up temporary files after detection"
     )

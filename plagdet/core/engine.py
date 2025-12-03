@@ -6,10 +6,9 @@ from typing import Any, Dict, List, Tuple
 from ..core.models.config import AppConfig
 from ..core.models.detection import DetectionResult
 from ..factories import DetectorFactory, OutputFactory, ProcessorFactory
-from ..plugins.models.detectors import JPlagConfig, MossConfig, DolosConfig, CopyDetectConfig
+from ..plugins.models.detectors import JPlagConfig
 from ..plugins.models.outputs import CSVOutputConfig, JSONOutputConfig
 from ..plugins.models.processors import EncodingNormalizerConfig, NormalizerConfig, UnzipperConfig
-from ..services.aggregation import AggregationService
 from ..services.cleanup import CleanupService
 from ..services.output import OutputManager
 from ..ui.formatters import print_error, print_info, print_success, print_warning
@@ -22,16 +21,12 @@ class PlagiarismDetectionEngine:
 
     This engine uses service layer for separation of concerns:
     - OutputManager: Handles output generation
-    - AggregationService: Combines multi-detector results
     - CleanupService: Manages temporary file cleanup
     """
 
     # Map detector names to their Pydantic config classes
     DETECTOR_CONFIG_MAP = {
         'jplag': JPlagConfig,
-        'moss': MossConfig,
-        'dolos': DolosConfig,
-        'copydetect': CopyDetectConfig,
     }
 
     # Map processor names to their Pydantic config classes
@@ -59,7 +54,6 @@ class PlagiarismDetectionEngine:
 
         # Initialize services
         self.output_manager = OutputManager(verbose=verbose)
-        self.aggregation_service = AggregationService(verbose=verbose)
         self.cleanup_service = CleanupService(verbose=verbose)
 
     def run(self) -> None:
@@ -73,8 +67,7 @@ class PlagiarismDetectionEngine:
         2. Run plagiarism detection
         3. Run post-detection processors
         4. Generate outputs (using OutputManager)
-        5. Auto-aggregate results (using AggregationService)
-        6. Cleanup temporary files (using CleanupService)
+        5. Cleanup temporary files (using CleanupService)
         """
         try:
             # Get all target paths (single or multiple)
@@ -132,19 +125,7 @@ class PlagiarismDetectionEngine:
             output_subdir=output_subdir,
         )
 
-        # Stage 5: Auto-aggregate if multiple detectors ran
-        if len(results) > 1 and self.config.settings.auto_aggregate:
-            # Put aggregated results in the same output subdirectory
-            results_dir = target_path / output_subdir
-            results_dir.mkdir(parents=True, exist_ok=True)
-            output_path = results_dir / 'aggregated.csv'
-            self.aggregation_service.aggregate_results(
-                results=results,
-                output_path=output_path,
-                min_score=0.0,
-            )
-
-        # Stage 6: Cleanup
+        # Stage 5: Cleanup
         if self.config.settings.cleanup_temp:
             self.cleanup_service.cleanup_temp_directories()
 
