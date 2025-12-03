@@ -226,23 +226,52 @@ class UtilityHandler:
             temp_directories=temp_dirs,
         )
 
-    def find_archives(self, target_path: Optional[str | Path] = None) -> list[Path]:
-        """Find all archive files (RAR, ZIP) in target directory recursively.
+    def find_archives(
+        self,
+        target_path: Optional[str | Path] = None,
+        exclude_pattern: Optional[str] = None,
+    ) -> list[Path]:
+        """Find all archive files in target directory recursively.
 
         Args:
             target_path: Directory to search (default: current directory)
+            exclude_pattern: Glob pattern for files to exclude (e.g., '2025*Fall*CSE*')
 
         Returns:
             List of paths to archive files found
         """
+        import fnmatch
+
+        archive_extensions = [
+            ".zip", ".rar", ".tar", ".tar.gz", ".tgz",
+            ".tar.bz2", ".tar.xz", ".7z",
+        ]
+
         if target_path is None:
             target_path = Path(".")
         else:
             target_path = Path(target_path)
 
-        rar_files = list(target_path.rglob("*.rar"))
-        zip_files = list(target_path.rglob("*.zip"))
-        archive_files = rar_files + zip_files
+        # Find all archive files
+        archive_files = []
+        for ext in archive_extensions:
+            archive_files.extend(target_path.rglob(f"*{ext}"))
+
+        # Always exclude results.zip (tool-generated) and venv directories
+        archive_files = [
+            f for f in archive_files
+            if f.name != "results.zip"
+            and ".venv" not in f.parts
+            and "venv" not in f.parts
+        ]
+
+        # Apply user-defined exclude pattern
+        if exclude_pattern:
+            archive_files = [
+                f for f in archive_files
+                if not fnmatch.fnmatch(f.name, exclude_pattern)
+            ]
+
         archive_files.sort()
 
         if archive_files:

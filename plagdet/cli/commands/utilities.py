@@ -79,18 +79,26 @@ def find_archives_command(
         None,
         help="Target directory to search (default: current directory)",
     ),
+    exclude_pattern: Optional[str] = typer.Option(
+        "2025*Fall*CSE*",
+        "--exclude", "-e",
+        help="Glob pattern for files to exclude (e.g., '2025*Fall*CSE*'). Use empty string to disable.",
+    ),
 ):
-    """Find all archive files (RAR, ZIP) recursively.
+    """Find all archive files (ZIP, RAR, TAR, 7z) recursively.
 
     Lists all archive files with their full paths.
+    Always excludes results.zip (tool-generated files).
 
     [cyan]Examples:[/cyan]
-        plagdet find-archives                   # Search current directory
-        plagdet find-archives ./submissions/    # Search specific directory
+        plagdet find-archives                        # Search current directory
+        plagdet find-archives ./submissions/         # Search specific directory
+        plagdet find-archives -e "2026*Spring*CSE*"  # Custom exclusion pattern
+        plagdet find-archives -e ""                  # No exclusion (except results.zip)
     """
     try:
         handler = UtilityHandler()
-        handler.find_archives(target_path=target_path)
+        handler.find_archives(target_path=target_path, exclude_pattern=exclude_pattern or None)
 
     except Exception as e:
         print_error(f"Find archives failed: {e}")
