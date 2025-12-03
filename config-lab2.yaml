@@ -37,4 +37,6 @@ settings:
   target_paths:
     - ./section1/labwork2-Even/
     - ./section1/labwork2-Odd/
+    - ./section2/labwork2-Even/
+    - ./section2/labwork2-Odd/
   base_path: base

@@ -50,6 +50,8 @@ settings:
   target_paths:
     - ./section1/labwork1-Even/
     - ./section1/labwork1-Odd/
+    - ./section2/labwork1-Even/
+    - ./section2/labwork1-Odd/
   base_path: base  # Global base code folder to exclude from detection
 
   cleanup_temp: false
