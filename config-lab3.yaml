@@ -2,7 +2,7 @@ detectors:
 - name: jplag
   config:
     language: cpp
-    token_length: 6
+    token_length: 8
     base_path: base
     suffixes: [".tpp", ".cpp"]
     # Optimization: Enable token normalization (catches variable renaming)
@@ -11,7 +11,6 @@ detectors:
     match_merging: true
     gap_size: 6
     neighbor_length: 2
-    # Avoid errors on re-runs
     overwrite: true
 
 
@@ -35,6 +34,5 @@ settings:
   cleanup_temp: false
   verbose: true
   target_paths:
-    - ./section1/labwork2-Even/
-    - ./section1/labwork2-Odd/
+    - ./section1/labwork3-Odd/
   base_path: base
